@@ -1,0 +1,62 @@
+.profile {
+    position: relative;
+    margin: 0px;
+    padding: 0px;
+    padding-top: 10px;
+    min-width: 120px;
+    margin-top: 8px;
+    overflow: visible;
+    max-height: 28px;
+}
+
+.button-custom.profile-picture {
+    padding: 0px;
+    margin: 0px;
+    margin-top: 3px;
+}
+
+.profile-align {
+    border-radius: 10px;
+    padding: 5px 5px;
+}
+
+.profile-align:hover {
+    background: var(--grey-darker);   
+    color: var(--blue-hover)
+}
+
+.profile-align .picture img {
+    width: 20px;
+    border-radius: 25%;
+}
+
+.profile-align .button-custom.profile-picture {
+    width: 20px;
+}
+
+.profile-align .name {
+    
+}
+
+.profile-nav {
+    bottom: -120%;
+    background-color: var(--grey-darker);
+    width: 95%;
+}
+
+.profile-nav .element {
+    cursor: pointer;
+    max-width: 100%;
+    text-align: left;
+    padding: 10px 10px;
+    outline: 1px solid var(--grey-hover);
+    font-size: small; 
+}
+
+.profile-nav .element.button:hover {
+    color: var(--blue-hover)
+}
+
+.profile-nav .element.button:active {
+    background-color: var(--grey-active)
+}

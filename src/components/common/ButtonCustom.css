@@ -1,0 +1,65 @@
+.button-custom {
+    position: relative;
+    color: black;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px;
+}
+.button-custom.white {
+    color: white;
+}
+
+.button-custom:hover {
+    color: var(--blue-hover);
+    cursor: pointer;
+}
+
+.button-custom:active {
+    color: var(--blue-active);
+}
+
+.button-custom.selected {
+    color: var(--blue-selected);
+    outline: 2px solid  var(--blue-selected);
+}
+
+.button-custom.selected:hover {
+    color: rgba(110, 110, 110, 0.745);
+    cursor: pointer;
+}
+
+.button-custom.selected:active {
+    color: rgb(0, 0, 0);
+}
+
+.button-custom.disabled {
+    color: var(--grey-focus);
+    outline: 2px solid var(--grey-focus);
+}
+
+.button-custom .hoverText {
+    position: absolute;
+    bottom: -150%;
+    padding: 10px 5px;
+    color: black;
+    background-color: white;
+    box-shadow: 1px 1px 5px black;
+    text-align: center;
+    white-space: nowrap;
+    font-size: medium;
+    border-radius: 10px;
+    user-select: none;
+    overflow: hidden;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.unselectable {
+    user-select: none; /* standard syntax */
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
+  }
+  

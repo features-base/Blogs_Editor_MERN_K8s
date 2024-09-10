@@ -1,0 +1,33 @@
+.empty-div {
+    margin: 0px;
+    padding: 0px;
+}
+
+.type-area .text-div{
+    padding: 5px;
+}
+
+.type-area.editable .text-div:hover {
+    box-shadow: -4px 0 0 #999999;
+}
+
+.type-area.editing .text-div:hover {
+    box-shadow: -4px 0 0 #000;
+}
+
+.type-area .text-div:focus {
+    outline: 1px solid black;
+}
+
+.search-bar .type-area {
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+}
+
+.search-bar .type-area .text-div {
+    margin: 0px;
+    padding: 10px;
+}

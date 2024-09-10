@@ -1,0 +1,35 @@
+:root {
+  --blue-hover: rgb(0, 173, 199);
+  --blue-active: rgb(0, 180, 208);
+  --blue-selected: rgb(0, 180, 208);
+
+  --grey-darker: rgb(44, 44, 44);
+  --grey-default: rgb(100, 100, 100);
+  --grey-hover: rgb(94, 94, 94);
+  --grey-active: rgb(100, 100, 100);
+  --grey-focus: rgb(73, 73, 73);
+}
+.vertical-align {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.horizontal-align {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

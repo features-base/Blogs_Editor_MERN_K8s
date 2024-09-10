@@ -1,0 +1,62 @@
+.nav-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    outline: 1px solid rgb(76, 0, 255);
+    color: white;
+    background-color: var(--grey-darker);
+}
+
+.nav-bar .search-bar {
+    margin: 10px;
+    padding: 0px;
+    left: 0px;
+    background-color: var(--grey-default);
+}
+
+.nav-bar .search-bar:hover {
+    background-color: var(--grey-hover);
+}
+
+.nav-bar .search-bar:active {
+    background-color: var(--grey-active);
+}
+
+.nav-bar .search-bar:focus {
+    background-color: var(--grey-focus);
+}
+
+.nav-bar .nav-buttons {
+    right: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: 360px;
+}
+
+.nav-bar .nav-button {
+    margin: 0px;
+    padding: 5px 10px;
+    height: fit-content;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: inherit;
+    color: white;
+}
+.nav-bar .nav-button.navigatingTo {
+    box-shadow: -1px 0px 4px var(--blue-active)
+}
+.nav-bar .nav-button.selected {
+    box-shadow: -1px 0px 4px var(--blue-selected)
+}
+.nav-bar .nav-buttons .nav-button:hover {
+    color: var(--blue-hover);
+}
+
+.nav-bar .nav-buttons .nav-button:active {
+    color: var(--blue-active);
+}
+

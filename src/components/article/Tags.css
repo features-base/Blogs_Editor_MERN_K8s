@@ -1,0 +1,53 @@
+.article .tags {
+    display: flex;
+    flex-direction: row;
+    padding: 2px 5px;
+    margin: 0px;
+    font-size: 17px;
+}
+
+.article .tag {
+    font-size: smaller;
+    margin: 0px;
+    padding:0ox;
+    padding: 1px 8px 3px;
+}
+.article .tag-wrapper {
+    display: flex;
+    flex-direction: row;
+    margin: 0px 7px;
+    padding: 3px 8px 1px;
+    background-color: rgb(224, 224, 224);
+    border-radius: 8px;
+}
+.article .tag.add , .article .tag.delete {
+    padding: 2px 8px;
+}
+.article .tag.add {
+    padding: 5px 8px;
+}
+.article .tag.delete {
+    box-shadow: inset 1px 0px 0px rgb(133, 133, 133)
+}
+.article .tag:hover {
+    cursor: pointer;
+    box-shadow: inset 0px 0px 8px rgb(190, 190, 190),
+        inset 0px 0px 2px rgb(141, 141, 141)
+    ;
+}
+
+.article .tag:active {
+    cursor: pointer;
+    box-shadow: inset 0px 0px 8px rgb(136, 136, 136),
+        inset 0px 0px 2px rgb(100, 100, 100)
+    ;
+}
+.article .tags .type-area , .article .tags .type-div {
+    padding: 0px;
+}
+
+.article .tags .type-area .text-div{
+    padding: 3px 8px 5px;
+    box-shadow: none;
+    outline: none;
+}

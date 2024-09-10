@@ -1,0 +1,46 @@
+.articles { 
+    padding: 20px;
+    width: 100vw;
+}
+.search-options {
+    width: 100%;
+    margin: 10px 0px 10px 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.search-results {
+    width: 100%;
+    margin: 20px 0px 10px 20px;
+}
+
+.search-meta {
+    text-align: left;
+    padding: 0px 10px 4px;
+}
+
+.search-status {
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    margin: 8px;
+    margin-left: 20px;
+}
+.search-status svg {
+    margin-top: 4px;
+}
+.search-status div{
+    margin-left: 8px;
+}
+.search-options .search-bar {
+    margin: 0px 0px;
+}
+
+.article-previews {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 90%;
+    max-height: 440px;
+    overflow-y: scroll;
+}
