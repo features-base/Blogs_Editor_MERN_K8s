@@ -8,6 +8,7 @@ To establish a TLS session through a TLS handshake.
 <b>Methods Allowed :</b> POST
 <b>Content-Type :</b> application/json 
 <b>Body :</b>  
+  <b>encryption :</b> The encryption method used. It must be set to "public" for this client hello.
   <b>payload :</b> 256 byte AES key encrypted using the public key of the TLS certificate 
 <b>Response :</b> The server hello
   <b>200 :</b> Session has been successfully established 
@@ -18,7 +19,9 @@ To establish a TLS session through a TLS handshake.
         <b>authTag :</b> AES-256-GCM auth tag for the ciphertext 
 </pre>
 
-<h3>/api/** (Any resource)</h3> - This is a general specification across all the APIs
+## Symmetric Encryption
+
+<h3>/api/** (Any resource)</h3> - This is a general specification applicable across all the APIs
 <pre>
 To use the AES key after the TLS handshake
 <b>Methods Allowed :</b> POST/PUT/DELETE
@@ -74,7 +77,7 @@ To exchange the Google Oauth2 access token for the user claims and a session tok
   <b>500 :</b> Internal server error
 </pre>
 
-## User edit sessions
+## Manage user edit sessions
 
 <h3>/api/user/saveCloudSession</h3>
 <pre>
