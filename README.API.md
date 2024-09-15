@@ -60,7 +60,7 @@ To perform Google OAuth2 login. Once logged in, you will be redirected to the Ar
 
 <h3>/api/user/getGoogleOAuth2Claims</h3>
 <pre>
-To exchange the Google Oauth2 authorization code for the user claims and a session token
+To submit the Google Oauth2 authorization code to get the user claims and a session token
 <b>Methods Allowed :</b> POST
 <b>Content-Type :</b> application/json 
 <b>Body :</b>  
