@@ -44,22 +44,23 @@ To use the AES key after the TLS handshake
 ## User Authentication 
 
 For resources that require authentication, session token must be provided. 
-Once a user logs in and submits the access token, a session token will be provided to the user.
+Once a user logs in and submits the authorization code, a session token will be provided to the user.
 It can either be attached to the body of the requests that access protected resources, or 
   to the 'Authorization' header as the keyword 'bearer' followed by the session token.
 
 <h3>/api/user/login</h3>
 <pre>
-To redirect to Google OAuth2 consent screen
+To perform Google OAuth2 login. Once logged in, you will be redirected to the Articles home page
+  which will submit the authorization code to the following API "api/user/getGoogleOAuth2Claims".
 <b>Methods Allowed :</b> GET
 <b>Response :</b>
-  <b>302 :</b> You will be redirected to the Google OAuth2 consent screen
+  <b>302 :</b> Redirection to the Google OAuth2 consent screen
   <b>500 :</b> Internal server error
 </pre>
 
-<h3>/api/user/getGoogleOauth2Claims</h3>
+<h3>/api/user/getGoogleOAuth2Claims</h3>
 <pre>
-To exchange the Google Oauth2 access token for the user claims and a session token
+To exchange the Google Oauth2 authorization code for the user claims and a session token
 <b>Methods Allowed :</b> POST
 <b>Content-Type :</b> application/json 
 <b>Body :</b>  
