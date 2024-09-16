@@ -2,7 +2,7 @@
   on:
     push:
       branches:
-        - main
+        - save3
   jobs:
     Build:
       name: Build
