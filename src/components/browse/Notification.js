@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 
-import "./Notification.css"
 import { AppContext } from '../../App'
 
 const typeSvgs = {

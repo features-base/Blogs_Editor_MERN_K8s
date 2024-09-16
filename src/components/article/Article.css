@@ -9,21 +9,6 @@
     min-width: 250px;
 }
 
-.article .tags {
-    display: flex;
-    flex-direction: row;
-    padding: 2px 5px;
-    margin: 0px;
-    font-size: 17px;
-}
-
-.article .tag {
-    font-size: smaller;
-    margin: 0px 5px;
-    padding: 1px 8px 3px;
-    background-color: rgb(224, 224, 224);
-    border-radius: 8px;
-}
 .article-meta {
     display: flex;
     flex-direction: row;

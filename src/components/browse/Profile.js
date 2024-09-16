@@ -1,6 +1,5 @@
 import React, {useState,useContext} from "react"
 
-import "./Profile.css"
 
 import { AppContext } from "../../App"
 import ButtonCustom from "../common/ButtonCustom"
@@ -29,9 +28,19 @@ function Profile () {
     const { session , setSession , API , setNotification } = useContext(AppContext)
     
     const [hovering , setHovering] = useState(false)
-
+    const [imageError,setImageError] = useState(false)
+    
     if(session.state === 'loggedOut') {
         return <GoogleSignIn></GoogleSignIn>
+    }
+    if(session.state === 'exchangingTokens') {
+        return (
+            <div className="profile vertical-align">
+                <div className='profile-align horizontal-align'>
+                    Logging in...
+                </div>
+            </div>
+        )
     }
 
     async function logout() {
@@ -57,10 +66,14 @@ function Profile () {
                 <div className="picture vertical-align">
                     {
                         ((session.state === 'loggedIn' && session.userInfo.picture)?
+                            (imageError)?
+                                <ButtonCustom option={{...guest.picture.svgOptions,name:session.userInfo.name}}></ButtonCustom>
+                            :
                             <img 
                                 src = {session.userInfo.picture}
                                 alt = "google profile picture"
                                 load = "eager"
+                                onerror={() => setImageError(true)}
                                 
                             ></img>
                             :

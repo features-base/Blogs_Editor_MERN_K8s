@@ -1,9 +1,6 @@
 import request from "./request"
 import { AES , publicEncrypt } from "./cryptograph"
-var serverUrl =    process.env.REACT_SERVER_URL
-//if(!serverUrl) serverUrl = "https://localhost:443"
-if(!serverUrl) serverUrl = "http://localhost:3000"
-const apiUri = serverUrl+"/api"
+import InMemoryStore from "./InMemoryStore"
 
 class TLS {
     static status = undefined
@@ -19,7 +16,7 @@ class TLS {
         console.log('aesKey.length ='+key.length,'\naesKey =',key)
         var clientHello = {
             method: 'post',
-            uri: serverUrl+'/api/tlshandshake',
+            uri: InMemoryStore.store.cache.env.REACT_API_URL+'tlshandshake',
             body : { encryption: 'public', 
                 payload : await publicEncrypt({
                     secret: key

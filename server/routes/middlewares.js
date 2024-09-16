@@ -1,9 +1,10 @@
 const { maindb, executeTransaction, ObjectId } = require('../db/mongo');
 const { UserSessions } = require("../common/session")
-const {X509Certificate,createPrivateKey} = require('crypto') 
+const {createPrivateKey} = require('crypto') 
 const crypto = require('crypto')
 const path = require('node:path'); 
 const fs = require('fs');
+const request = require('../common/https_requests')
 
 function privateDecrypt(req,res) {
     const key = createPrivateKey(
@@ -21,9 +22,10 @@ function privateDecrypt(req,res) {
     res.sessionId = sessionId
 }
 
-function generateKey(size=32) {
+function generateKey(size=32,domain) {
     var key = ''
     const base64Domain = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    if(!domain) domain = base64Domain
     for (var i=0;i<size;i+=1)  
         key += base64Domain.charAt(Math.floor(Math.random() * base64Domain.length));
     return key
@@ -97,20 +99,11 @@ function encryptPayload(req,res,resData) {
 const rsa = { encryptPayload , decryptPayload }
 
 function global(req,res,next) {
-    /*
+    
     res.set({
         'Access-Control-Allow-Origin':'*',
         'Access-Control-Allow-Headers':'*',
         'Access-Control-Allow-Methods':'*',
-        'Access-Control-Expose-Headers':'*',
-        'Access-Control-Max-Age':'7200',
-        'Access-Control-Allow-Credentials':true,
-    })*/
-    
-    res.set({
-        'Access-Control-Allow-Origin':'https://localhost:3000',
-        'Access-Control-Allow-Headers':'Content-type',
-        'Access-Control-Allow-Methods':'ORIGIN,OPTIONS,GET,POST',
         'Access-Control-Expose-Headers':'*',
         'Access-Control-Max-Age':'7200',
         'Access-Control-Allow-Credentials':true,
@@ -177,6 +170,49 @@ const protectedRoute = async(req,res,next) => {
         (req.session === 'expired')?'Your session has expired.':"")
 }
 
+const exchangeAuthCode = async ( { authorizationCode , accessToken,codeVerifier } ) => {
+    
+    const tokenEndpoint = "https://oauth2.googleapis.com/token"
+
+    if(authorizationCode) {
+        var tokenBody = { 
+            client_id: process.env.GOOGLE_OAUTH2_CLIENT_ID ,
+            client_secret: process.env.GOOGLE_OAUTH2_CLIENT_SECRET ,
+            code: authorizationCode,
+            code_verifier: codeVerifier,
+            grant_type: 'authorization_code',
+            redirect_uri: process.env.GOOGLE_OAUTH2_REDIRECT_URI
+        }
+        console.log('tokenBody :',tokenBody)
+        try {
+            var tokens = await request.post({
+                uri: tokenEndpoint , body: tokenBody
+            });  
+        }
+        catch ( error ) {
+            console.log("Unexpected error in accessing tokens from identity provider")
+            throw error
+        }
+        console.log('tokens :',tokens)
+        accessToken = tokens.access_token
+    }
+    
+    var splitIdToken = tokens.id_token.split('.')
+    const JWT = { 
+        header: JSON.parse(Buffer.from(splitIdToken[0],'base64').toString('ascii')),
+        payload: JSON.parse(Buffer.from(splitIdToken[1],'base64').toString('ascii'))
+    }
+
+    console.log('JWT :',JWT)
+    const claims = JWT.payload
+    console.log('claims :',claims,"claims.email :",claims.email)
+    if( !claims.email || ( typeof claims.email !== 'string' || claims.email.length === 0 ) ) {
+        throw   { reason: 'Identity provider error' }
+    }
+
+    return claims
+}
+
 const filter = async (req,res,next) => {
     const { filterQuery } = req.body
 
@@ -223,7 +259,7 @@ const update = async (req,res,next) => {
     const { [resourceType]: resource, upsert=false , respond=true } = req.body
     const newEntity = resource?resource:req.body.newEntity
     if(newEntity === undefined) {
-        return res.status(422).send({ reason: resourceType+' body field required' })
+        return res.status(400).send({ reason: resourceType+' body field required' })
     }
     if(!( newEntity instanceof Object )) {
         return res.status(400).send({ reason: resourceType+' field must be an object' })
@@ -333,7 +369,7 @@ const search = async (req,res,next) => {
     }
     
     if(respond) {
-        if( !searchResults.length ) res.status(404)
+        if( !searchResults.length ) res.status(200)
         console.log('searchResults1',searchResults)
         res.send({ searchResults })
     }
@@ -352,7 +388,7 @@ const getById = async (req,res,next) => {
     )
     
     if(entityId === undefined) {
-        return res.status(422).send({ reason: 'Id parameter required' })
+        return res.status(400).send({ reason: 'Id parameter required' })
     }
     if(typeof entityId !== 'string') {
         return res.status(400).send({ reason: 'Id must be a string' })
@@ -387,4 +423,4 @@ const requestHandler = {
     filter, update, search, getById
 }
 
-module.exports = { rsa, isAuthenticated, protectedRoute, configureResponse , requestHandler }
+module.exports = { generateKey, exchangeAuthCode, rsa, isAuthenticated, protectedRoute, configureResponse , requestHandler }

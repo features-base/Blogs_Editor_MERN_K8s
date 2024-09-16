@@ -7,11 +7,12 @@ async function accessResource(options) {
     return response
 }
 
-function useAPI({ session , cache , setNotification }) {
+
+function useAPI({ session , setSession , setNotification }) {
 
     const API = {} 
     const attachments = {
-        session, cache, setNotification, API
+        session, setNotification, API, setSession
     }
     const wrapSessionToken = (options) => {
         if(!options) options = {}
@@ -20,17 +21,27 @@ function useAPI({ session , cache , setNotification }) {
         body = { ...body , sessionToken:session.sessionToken }
         return { ...options , body , ...attachments }
     }
+    
+    async function doRequest (options,loader) {
+        options = wrapSessionToken(options)
+        var response = await loader(options)
+        if(response.status == 401) 
+            if(session.state==='loggedIn')
+                setSession({ ...session, state : 'loggedOut' })
+        return response
+    }
+    
     API.accessResource = (options) => {
-        return accessResource(wrapSessionToken(options))
+        return doRequest(options,accessResource)
     }
     API.getArticles = (options) => {
-        return getArticles(wrapSessionToken(options))
+        return doRequest(options,getArticles)
     } 
     API.getArticle = (options) => {
-        return getArticle(wrapSessionToken(options))
+        return doRequest(options,getArticle)
     }
     API.getSession = (options) => {
-        return getSession(wrapSessionToken(options))
+        return doRequest(options,getSession)
     }
     return ( API )
 }

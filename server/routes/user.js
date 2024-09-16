@@ -1,11 +1,12 @@
 const express = require("express")
 const router = express.Router();
-const { maindb , executeTransaction , collections } = require('../db/mongo');
-const { protectedRoute , requestHandler } = require("./middlewares")
+const crypto = require('crypto')
+const { generateKey , protectedRoute , exchangeAuthCode , requestHandler } = require("./middlewares")
 const queryString = require('node:querystring'); 
-const request = require('../common/https_requests')
 const { UserSessions } = require('../common/session')
-
+var codeVerifier = generateKey(128,'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~')
+var codeChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url')
+console.dir({codeVerifier,codeChallenge})
 router.post("/filter", requestHandler.filter)
 
 router.post("/update", protectedRoute, requestHandler.update)
@@ -13,67 +14,68 @@ router.post("/update", protectedRoute, requestHandler.update)
 router.post("/search", requestHandler.search)
 
 router.get("/login", async (req,res) => {
-    authorizationUrl = "https://accounts.google.com/o/oauth2/v2/auth"
-    authorizationUri = authorizationUrl + "?"
-    redirectUri = process.env.GOOGLE_OAUTH2_REDIRECT_URI
-    if(!redirectUri) redirectUri = 'https://localhost:3000/user/sso/oauth2/google'
-    uriParameters = queryString.stringify({
+    var authorizationUrl = "https://accounts.google.com/o/oauth2/v2/auth"
+    var authorizationUri = authorizationUrl + "?"
+
+    var redirectUri = process.env.GOOGLE_OAUTH2_REDIRECT_URI
+    if(!redirectUri) redirectUri = 'https://localhost:443'
+    var uriParameters = queryString.stringify({
         redirect_uri: redirectUri ,
         client_id: process.env.GOOGLE_OAUTH2_CLIENT_ID ,
-        response_type: "id_token token",
-        scope: "openid",
+        response_type: "code",//"id_token token",
+        //grant_type: 'pkce',
+        scope: "openid profile email",
         nonce: 'n-0S6_WzA2Mj',
-        display: 'popup'
+        display: 'popup',
+        code_challenge: codeChallenge,
+        code_challenge_method: 'S256'
+
     })
     authorizationUri += uriParameters
     console.log(authorizationUri)
-    return res.redirect( 302 , authorizationUri ) 
+    return res.redirect( 303 , authorizationUri ) 
 })
 
 router.post("/getUserInfo", async(req,res) => {
     const { accessToken , idToken , _id, name , user } = req.body
     if(accessToken !== undefined) 
-        return res.redirect(307,req.baseUrl+"/getGoogleOauth2Claims")
+        return res.redirect(307,req.baseUrl+"/getGoogleOAuth2Claims")
     if(_id !== undefined || name !== undefined || user !== undefined)
         return {}
 })
 
-router.post("/getGoogleOauth2Claims", async(req,res) => {
-    const { accessToken , idToken , editing = {cloud:{},local:{}} } = req.body
+router.post("/getGoogleOAuth2Claims", async(req,res) => {
+    var { accessToken , idToken , authorizationCode, editing = {cloud:{},local:{}} } = req.body
 
     // baseUrl will be of the form api/newEntitys/... , api/users... etc...
     const resourceType = req.baseUrl.split('/')[1]
     const collectionName = resourceType+'s'
     
-    if(accessToken === undefined) {
-        return res.status(422).send({ reason: 'accessToken body field required' })
+    if(authorizationCode === undefined && accessToken === undefined) {
+        return res.status(400).send({ reason: 'authorizationCode body field required' })
     }
     
-    if( typeof accessToken !== 'string' && !( accessToken instanceof String )) {
+    if( ( typeof authorizationCode !== 'string' && !( authorizationCode instanceof String ) )
+        &&  ( typeof accessToken !== 'string' && !( accessToken instanceof String )) ) {
         res.statusMessage = 'accessToken field must be a string'
-        return res.status(400).send({ reason: 'accessToken field must be a string' })
+        return res.status(400).send({ reason: 'authorizationCode field must be a string' })
+    }
+    var claims
+    try {
+        claims = await exchangeAuthCode({authorizationCode,codeVerifier})
+    }
+    catch(error) {
+        console.dir(error,{depth:5})
+        console.log('res.json :',await error.res.json())
+        return res.status(500).send("Error during openid protocol execution")
     }
 
-    var userInfoEndpoint = "https://www.googleapis.com/oauth2/v1/userinfo"
-    //userInfoEndpoint = "https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses"
-    queryParams = queryString.stringify({ alt:'json' , access_token: accessToken })
-    try {
-        var claims = await request.get(
-            userInfoEndpoint + '?' + queryParams,
-        );  
-    }
-    catch ( error ) {
-        return res.sendStatus(500,"Unexpected error in accessing userInfo from identity provider")
-    }
-    if( !claims.email || ( typeof claims.email !== 'string' || claims.email.length === 0 ) ) {
-        return res.status(500).send({ reason: 'Identity provider error' })
-    }
     var newSession = {
         ...req.body.session, accessToken, idToken, userInfo: claims, editing
     }
     req.body = {...req.body , session:newSession, respond:false}
 
-    session = UserSessions.createSession(newSession)
+    var session = UserSessions.createSession(newSession)
     var resData = { session: await getSession(req, res) }
     req.authenticated = true
 
@@ -143,7 +145,7 @@ router.post('/saveCloudSession',protectedRoute,async(req,res) => {
         return res.status(422).statusText('Invalid sessionToken').send('The input sessionToken is not associated with any of the valid user sessions. Please verify the sessionToken for any typo.')
     if(!cloudSession || !(cloudSession instanceof Object))
         return res.status(400).statusText('cloudSession object field required').send('Attach the cloudSession object to the request body')
-    saved = UserSessions.saveCloudSession({ session , cloudSession })
+    var saved = UserSessions.saveCloudSession({ session , cloudSession })
     if(!saved) return res.status(422).statusText('Invalid data in the request').send('Please verify the data.')
     res.send('Session saved successfully')
 })
@@ -155,7 +157,7 @@ router.post('/loadCloudSession',protectedRoute,async(req,res) => {
         if(!userSession) return res.status(400).statusText('Invalid email')
         email = userSession.userInfo.email
     }     
-    cloudSession = UserSessions.loadCloudSession({email,sessionToken})
+    var cloudSession = UserSessions.loadCloudSession({email,sessionToken})
     if(!cloudSession) return res.status(200).statusText('No cloud sessions').send('Please save sessions in cloud before loading.')
     res.send({cloudSession})
 })

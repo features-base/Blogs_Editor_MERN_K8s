@@ -7,7 +7,12 @@
     font-size: 16.5px;
     cursor: pointer;
 }
-
+.article.preview .tags {
+    padding: 2px 0px;
+}
+.article.preview .tag {
+    padding: 1px 6px 3px;
+}
 .article.preview:hover {
     box-shadow: 3px 3px 16px;
 }
@@ -17,18 +22,6 @@
     right: 10px;
 }
 
-.article.preview .tags {
-    padding: 2px 0px;
-    margin: 0px;
-    font-size: 16px;
-}
-
-.article.preview .tag {
-    font-size: smaller;
-    margin: 0px 5px;
-    padding: 1px 8px 3px;
-    border-radius: 8px;
-}
 
 .article.preview .title {
     margin: 4px 0px 4px;

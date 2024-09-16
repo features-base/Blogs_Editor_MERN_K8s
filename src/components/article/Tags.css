@@ -16,30 +16,34 @@
     display: flex;
     flex-direction: row;
     margin: 0px 7px;
-    padding: 3px 8px 1px;
-    background-color: rgb(224, 224, 224);
+    background-color: rgb(154, 231, 255);
     border-radius: 8px;
+    overflow:hidden;
 }
+
+.article .tag {
+    padding: 1px 8px 3px;
+    outline: inherit;
+    border: inherit;
+}
+
 .article .tag.add , .article .tag.delete {
     padding: 2px 8px;
-}
-.article .tag.add {
-    padding: 5px 8px;
 }
 .article .tag.delete {
     box-shadow: inset 1px 0px 0px rgb(133, 133, 133)
 }
-.article .tag:hover {
+.article .editing .tag:hover {
     cursor: pointer;
-    box-shadow: inset 0px 0px 8px rgb(190, 190, 190),
-        inset 0px 0px 2px rgb(141, 141, 141)
+    box-shadow: inset 0px 0px 8px rgb(111, 145, 255),
+        inset 0px 0px 4px rgb(33, 74, 255)
     ;
 }
 
-.article .tag:active {
+.article .editing .tag:active {
     cursor: pointer;
-    box-shadow: inset 0px 0px 8px rgb(136, 136, 136),
-        inset 0px 0px 2px rgb(100, 100, 100)
+    box-shadow: inset 0px 0px 16px rgb(92, 130, 255),
+        inset 0px 0px 8px rgb(15, 59, 255)
     ;
 }
 .article .tags .type-area , .article .tags .type-div {

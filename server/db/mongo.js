@@ -43,7 +43,7 @@ async function executeTransaction(transaction,res,options={}) {
     if([11000].includes(error.code)) {
       throw error
     }
-    res.status(505).send({ message: "Database transaction aborted." })
+    res.status(500).send({ message: "Database transaction aborted." })
     return false
   } finally {
     await session.endSession();

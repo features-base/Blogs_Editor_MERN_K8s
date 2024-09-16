@@ -1,4 +1,4 @@
-import React, { useReducer } from "react"
+import React, { useReducer, useDebugValue } from "react"
 
 const routeReducer = (route,newUriString=window.location.pathname) => {
     var queryIndex = newUriString.indexOf('?')
@@ -15,10 +15,11 @@ const routeReducer = (route,newUriString=window.location.pathname) => {
       queryString
     }
     return (newRoute)
-  }
+}
 
 function useRoute() {
     const [route,setRoute] = useReducer(routeReducer, { uriString:'/', path:[], queryString:'' } )
+    useDebugValue(route.uriString)
     return [route,setRoute]
 }
 

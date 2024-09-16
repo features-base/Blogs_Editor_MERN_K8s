@@ -26,10 +26,17 @@
 .search-bar .type-area .text-div {
     margin: 0px;
     padding: 10px;
+    box-shadow: none;
+}
+
+.search-bar .type-area .text-div:hover {
+    outline: none;
+    box-shadow: none;
 }
 
 .search-bar .type-area .text-div:focus {
-    outline: none
+    outline: none;
+    box-shadow: none;
 }
 
 .search-bar .svgSpace {

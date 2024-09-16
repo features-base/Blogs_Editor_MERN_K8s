@@ -1,27 +1,23 @@
 import request from "./request"
 import { AES } from "./cryptograph"
 import TLS from "./TLS";
-//require('dotenv').config()
-//import dotenv from "dotenv"
-//dotenv.config()
-var serverUrl =    process.env.REACT_SERVER_URL
-//if(!serverUrl) serverUrl = 'https://localhost:443'
-if(!serverUrl) serverUrl = 'http://localhost:3000'
-const apiUri = serverUrl+"/api"
+import InMemoryStore from "./InMemoryStore";
 
 const methodConfig = {
 
     post: ({resourceType, operation, body}) => {
         return {
             method: "post",
-            uri: apiUri+"/"+resourceType+"/"+operation,
+            uri: InMemoryStore.store.cache.env.REACT_API_URL+resourceType+"/"+operation,
             body
         }
     },
 
     get: (options) => {
         const {resourceType, ids, sourceUri, operation} = options
-        const uri = ((sourceUri)?sourceUri:(apiUri+"/"+resourceType+"/"+operation+"/")) 
+        console.log(options.cache)
+        const uri = ((sourceUri)?sourceUri:(InMemoryStore.store.cache.env.REACT_API_URL+resourceType+"/"+operation+"/")) 
+        if(options.method) return { method:'get' , uri } 
         return { method:'post', uri }
         if(ids !== undefined && typeof ids == "string")
             return {

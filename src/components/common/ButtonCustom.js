@@ -1,8 +1,5 @@
 import React, {useState} from "react"
 
-import "./ButtonCustom.css"
-
-
 function ButtonCustom ({ option }) {
     const [ hovering , setHovering ] = useState(false)
     return (

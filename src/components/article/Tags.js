@@ -1,72 +1,52 @@
 import React , { useState,useEffect,memo } from 'react'
 
-import "./Tags.css"
-
 import EditableDiv from '../common/EditableDiv'
 
-const EditableDivMemo = memo(({name,props}) => {
-    return (
-        <EditableDiv name={name} props={props}></EditableDiv>
-    )
-},({name,props:oldProps},{props:newProps})=> {console.log(name,oldProps,newProps)
-    //if(oldProps.content && oldProps.content.tags.length !== newProps.content.tags.length)
-    //    return false
-    return true
-})
-
 function Tags ({ article, setArticle, editing }) {
-    const [content,setContent] = useState()
-    const [contentUpdate,setContentUpdate] = useState()
-
-    useEffect(()=>{
-        var newContent = {cursor:article.cursor,tags:article.tags}
-        article.tags.map((tag,idx) => {newContent['tag'+idx]=tag})
-        setContent(newContent)
-    },[])
-
-    useEffect(() => {
-        if(!contentUpdate) return
-        var props = contentUpdate
+    const updateContent = (props) => {
         var name = props.cursor.field
-        var idx = parseInt(name.slice(3))
+        var idx = parseInt(props.cursor.field.slice(3))
         var newTags = [ ...article.tags ]
         newTags[idx] = props[name]
-        var newCursor = { field: 'tags' }
-        setContent({...content,tags:newTags,[name]:props[name],cursor:props.cursor})
-        setArticle({tags:newTags,cursor:newCursor})
-    }, [contentUpdate])
+        var newCursor = props.cursor
+        setArticle({tag: { operation:'update', idx:props.cursor.idx, value: props[name] }, cursor: newCursor})
+    }
 
     function addTag () { 
-        setContent({...content,tags:[...content.tags,'']}) 
-        setArticle({...article,tags:[...article.tags,'']}) 
+        setArticle({    tag:   {operation:'add'}   })
     }
+
     function deleteTag (idx) { 
-        var newContent = {...content,tags:[...content.tags.slice(0,idx),...content.tags.slice(idx+1)]}
-        newContent.tags.map((tag,idx) => {newContent['tag'+idx]=tag})
-        setContent(newContent)
-        setArticle({...article,tags:[...article.tags.slice(0,idx),...article.tags.slice(idx+1)]}) 
+        setArticle({    tag:   {operation:'delete',idx}   }) 
     }
+    
     var tagProps = 
-        {className:'tag',editing,content,setContent:setContentUpdate,tag:true}
+        {className:'tag',editing,content:article,setContent:updateContent,tag:true}
         
     return(
         <div className={"tags "+((editing)?'editing':'')}>
             {(editing)?
-                <div className="tag add unselectable"
-                    onClick={addTag}    
-                >+</div>
+                <div className="tag-wrapper">
+                    <div className="tag add unselectable"
+                        onClick={addTag}    
+                    >+</div>
+                </div>
                 :<></>
             }
             {   
-                article.tags.map((tag,idx) => { 
+                article.tags.map((tag,idx) => {
+                    if(!editing && tag === '') return <></>
                     return  (
-                        ((content)?
-                            <div className='tag-wrapper'>
-                                <EditableDivMemo
-                                    name={'tag'+idx}
-                                    key={tag}
+                            <div 
+                                className={'tag-wrapper '
+                                    +((editing)?'editing ':'unselectable ')
+                                    }
+                                key={'tag'+idx}
+                            >
+                                <EditableDiv
+                                    name={'tag'}
                                     props= {{...tagProps,idx}}
-                                ></EditableDivMemo>
+                                ></EditableDiv>
                                 {(editing)?
                                     <div 
                                         className="tag delete unselectable"
@@ -75,7 +55,7 @@ function Tags ({ article, setArticle, editing }) {
                                     :<></>
                                 }
                             </div>
-                            : <></>)
+                        
                 )   })
             }
         </div>

@@ -43,11 +43,10 @@ function getMenuOptions({session,editing,setEditing,article,setArticle,submitArt
                 ,
                 { 
                     name: "reset",
-                    selected: saved.local,
+                    selected: saved.reset,
                     hoverText: "Click to reset the article",
                     handler: ()=>{
-                        setArticle({ ...articleOriginal.current , type: 'edit' })
-                        setEditing(false)
+                        setArticle({ ...articleOriginal.current , type: 'reset' })
                     },
                     svg: {
                         pathD:[

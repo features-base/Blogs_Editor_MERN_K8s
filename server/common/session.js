@@ -1,4 +1,4 @@
-const { createHmac } = require('node:crypto');
+const { createHmac , randomBytes } = require('node:crypto');
 
 class UserSessions {
 
@@ -8,7 +8,7 @@ class UserSessions {
     static aesKeys = {}
 
     static createSession(session) {
-        var hmac = createHmac('sha256',session.accessToken)
+        var hmac = createHmac('sha256',randomBytes(16))
         hmac.update(JSON.stringify(session))
         session.sessionToken = hmac.digest().toString('hex')
         

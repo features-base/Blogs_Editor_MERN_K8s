@@ -1,4 +1,8 @@
-async function getArticle ({articleId,session,cache,API}) {
+import InMemoryStore from '../common/InMemoryStore';
+
+const  cache=InMemoryStore.store.cache
+
+async function getArticle ({articleId,session,API}) {
     if(articleId === undefined) {
         const location = window.location;
         const queryParams = new URLSearchParams(location);

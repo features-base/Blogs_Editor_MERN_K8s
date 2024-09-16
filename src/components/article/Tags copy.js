@@ -1,7 +1,5 @@
 import React , { useState,useEffect,memo } from 'react'
 
-import "./Tags.css"
-
 import EditableDiv from '../common/EditableDiv'
 
 const EditableDivMemo = memo(({name,props}) => {

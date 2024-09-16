@@ -1,7 +1,5 @@
 import React, {useState,useEffect,useContext} from "react";
 
-import './Article.css'
-import './ArticlePreview.css';
 
 import {getArticle} from "./loaders"
 import { AppContext } from "../../App";
@@ -40,7 +38,7 @@ function ArticlePreview ({mode,articleId,...props}) {
 
     const [article, setArticle] = useState(props.article?props.article:defaultValues);
     const [editable, setEditable] = useState(false)
-    const {session,cache,setRoute} = useContext(AppContext)
+    const {session,setRoute} = useContext(AppContext)
 
     // Loads the article during first render
     useEffect(() => { ( async () => {
@@ -83,7 +81,7 @@ function ArticlePreview ({mode,articleId,...props}) {
                             return  (
                                 <div
                                     key = {'tag'+idx} 
-                                    className='tag'
+                                    className='tag tag-wrapper'
                                 >
                                     { tag }
                                 </div>

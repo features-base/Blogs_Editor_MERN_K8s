@@ -1,15 +1,19 @@
 async function post (options) {
   if(typeof options === 'string' || options instanceof String)
     options = { uri: options , body:{} }
-    const response = await fetch(options.uri, {
-        method: 'POST',
-        body: JSON.stringify(options.body),
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-        },
-    })
-  const data = response.json()
-  return data
+  const res = await fetch(options.uri, {
+      method: 'POST',
+      body: JSON.stringify(options.body),
+      headers: {
+          //'Content-type': 'application/json; charset=UTF-8',
+          'Content-type': 'application/json',
+      },
+  })
+  if (res.ok) {
+    const data = await res.json();
+    return data;
+  }
+  throw ({name:'res not ok',res})
 }
 
 async function get (options) {
@@ -20,7 +24,7 @@ async function get (options) {
     const data = await res.json();
     return data;
   }
-  throw error('error')
+  throw ({name:'res not ok',res})
 }
 
 const request = {

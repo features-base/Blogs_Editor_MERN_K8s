@@ -1,5 +1,4 @@
 import React, {useContext} from "react";
-import './MenuBar.css';
 
 import ButtonCustom from "./ButtonCustom"
 import { AppContext } from "../../App";

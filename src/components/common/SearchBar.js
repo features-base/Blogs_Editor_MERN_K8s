@@ -1,8 +1,7 @@
-import React, {useState,useRef,useLayoutEffect, Fragment} from "react"
+import React, {useState} from "react"
 
 import ButtonCustom from "../common/ButtonCustom"
 import EditableDiv from "./EditableDiv";
-import "./SearchBar.css"
 
 function SearchBar({ search=()=>{} , className="" }) {
 
@@ -31,7 +30,7 @@ function SearchBar({ search=()=>{} , className="" }) {
         }
     }
 
-    const eeditableDivProps = { content: searchTerm, setContent: setSearchTerm,
+    const editableDivProps = { content: searchTerm, setContent: setSearchTerm,
         preventEnter: true, enterEvent: searchBarOptions.search.handler
     }
 
@@ -39,7 +38,7 @@ function SearchBar({ search=()=>{} , className="" }) {
         <div className={"search-bar "+className}>
             <EditableDiv
                 name='searchTerm'
-                props={eeditableDivProps}
+                props={editableDivProps}
             ></EditableDiv>
             <ButtonCustom option={searchBarOptions.erase}></ButtonCustom>
             <ButtonCustom option={searchBarOptions.search}></ButtonCustom>

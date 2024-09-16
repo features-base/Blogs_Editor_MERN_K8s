@@ -1,5 +1,4 @@
 import React, {useState,useReducer,useRef,useEffect,useMemo,memo,useContext} from "react";
-import './Article.css';
 
 import MenuBar from "../common/MenuBar";
 import getMenuOptions from "./getMenuOptions";
@@ -10,9 +9,28 @@ import { AppContext } from "../../App"
 function articleReducer(article,{ setSaved, type, ...prop}){
     if(!type) type = 'edit'
     setSaved(saved => { 
-        if(type==='edit') return {...saved,cloud:false,local:false,committed:false}
+        if(type==='edit') return {...saved,cloud:false,local:false,committed:false,reset:false}
+        if(type==='reset') return {...saved,cloud:false,local:false,committed:false,reset:true}
         return {...saved,[type]:true }
     })
+    if(Object.keys(prop).includes('tag')) {
+        var newTags = [...article.tags]
+        switch(prop.tag.operation) {
+            case 'update':
+                newTags[prop.tag.idx] = prop.tag.value
+                break
+            case 'add':
+                newTags.push('')
+                break
+            case 'delete':
+                newTags = [...newTags.slice(0,prop.tag.idx),...newTags.slice(prop.tag.idx+1)]
+                break
+            case 'replace':
+                newTags = prop.tag.newTags
+        }
+        prop.tags = newTags
+        delete prop.tag
+    }
     return ({...article,...prop})
 }
 
@@ -26,7 +44,6 @@ const defaultValues = {
     body:"This is the content of the article demonstrating the web app."+ 
       " This can be editable with a button."
 }
-window.localStorage.setItem('create',JSON.stringify(defaultValues))
 
 const EditableDivMemo = memo(({name,props}) => {
     return(
@@ -36,10 +53,22 @@ const EditableDivMemo = memo(({name,props}) => {
         ></EditableDiv>
     )
 },({props:prevProps},{name,props:newProps}) => {
+    return false
+    //return true
     var prevArticle = prevProps.content,newArticle = newProps.content
+    console.dir({ name , prev:prevArticle[name], new:newArticle[name]
+        , saved: newProps.saved , prevArticle , newArticle
+        , prevProps , newProps
+     })
+     return false
     if(prevProps.editing !== newProps.editing) return false
     if(prevProps.editable !== newProps.editable) return false
     if(prevProps.error !== newProps.error) return false
+    if(newProps.saved.cloud || newProps.saved.local 
+        || newProps.saved.committed || newProps.saved.reset) {
+            console.log('returning',(prevArticle[name] !== newArticle[name]))
+        if(prevArticle[name] !== newArticle[name]) return false
+    }
     return true
     if (prevArticle[name] !== newArticle[name]) return false
     if(!prevArticle.cursor) {
@@ -52,11 +81,30 @@ const EditableDivMemo = memo(({name,props}) => {
     return(prevArticle.cursor.offset === newArticle.cursor.offset)
 })
 
+
+const TagsMemo = memo(({article,setArticle,editing}) => {
+    return (
+        <Tags 
+            article={article} 
+            setArticle={setArticle} 
+            editing={editing}
+        >
+        </Tags>
+    )
+}, ({article:oldArticle,editing:oldEditing},{article:newArticle,editing:newEditing}) => {
+    //console.log(oldArticle.tags,newArticle.tags)
+     return false
+    return (
+        oldArticle.tags.length === newArticle.tags.length
+        &&
+        oldEditing === newEditing)
+})
+
 function Article ({mode,articleId}) {
 
     const [editing, setEditing] = useState(false);
     const [editable,setEditable] = useState(false)
-    const [saved,setSaved] = useState({local:false,cloud:false,committed:(mode!=='create'),updated:((mode!=='create')?'committed':false)})
+    const [saved,setSaved] = useState({local:false,cloud:false,committed:(mode!=='create'),reset:true,updated:((mode!=='create')?'committed':false)})
     const [article, setArticle] = useReducer( (article,prop) => articleReducer(article,{...prop,setSaved}), defaultValues);
     const [isLoading, setIsLoading] = useState(true)
     const { session , API, uriPath, setNotification } = useContext(AppContext)
@@ -90,6 +138,7 @@ function Article ({mode,articleId}) {
             setEditing(true)
             if(session.state === 'loggedIn') 
                 article.author = session.userInfo
+            articleOriginal.current = { ...newArticle }
             setArticle(newArticle)
             return
         }
@@ -99,14 +148,18 @@ function Article ({mode,articleId}) {
     // Validates and publishes the edited article 
     const submitArticle = async () => {
         var value, errorsTemp = {}
-        for(var field in ['title','deck']) {
-            value = article[field]
+        var requiredFields = ['title','deck']
+        requiredFields.map((field,idx) => {
+            value = article[field].trim()
             if(value === '') {
                 errorsTemp[field] = field+' field cannot be empty'
             }
-        }
+        })
+        var newTags = article.tags.filter(tag => tag.trim().length)
         if(Object.keys(errorsTemp).length !== 0) {
             setErrors(errorsTemp)
+            if(newTags.length !== article.tags.length)
+                setArticle({ tags : { operation: 'replace', newTags } })
             return
         }
         delete article.cursor
@@ -127,7 +180,7 @@ function Article ({mode,articleId}) {
 
     const articleRef = useRef();
     var menuOptions = useMemo(()=>getMenuOptions({session,editing,setEditing,article,setArticle,submitArticle,setNotification,API,articleOriginal,saved,setSaved}))
-    const editableDivProps = { content: article , setContent: setArticle, editable, editing, errors }
+    const editableDivProps = { content: article , setContent: setArticle, saved, editable, editing, errors }
 
     if(isLoading)
         return(
@@ -149,9 +202,14 @@ function Article ({mode,articleId}) {
             }   
             <div className="header">
                 <div className="article-meta">
-                    
-                        <Tags article={article} setArticle={setArticle} editing={editing}></Tags>
-                    
+                        {
+                        <TagsMemo
+                            article={article} 
+                            setArticle={setArticle} 
+                            editing={editing}
+                        >
+                        </TagsMemo>
+                        }
                     <div className="article-id">
                         {article.articleId}
                     </div>

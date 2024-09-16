@@ -3,7 +3,8 @@
     margin: 0px;
     padding: 0px;
     padding-top: 10px;
-    min-width: 120px;
+    min-width: 160px;
+    max-width: 160px;
     margin-top: 8px;
     overflow: visible;
     max-height: 28px;
@@ -42,6 +43,7 @@
     bottom: -120%;
     background-color: var(--grey-darker);
     width: 95%;
+    z-index:2;
 }
 
 .profile-nav .element {

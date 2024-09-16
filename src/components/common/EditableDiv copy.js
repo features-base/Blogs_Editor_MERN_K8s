@@ -1,6 +1,5 @@
 import React, {useRef,useEffect} from "react"
 
-import "./EditableDiv.css";
 
 function EditableDiv({name, props: { className=' ', content, idx,tag, setContent, editable=true, editing=true, errorsProp } , enterEvent}) {
     const ref = useRef()

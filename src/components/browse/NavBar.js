@@ -1,7 +1,5 @@
 import React, {useContext,useTransition,useState} from "react";
 
-import "./NavBar.css"
-
 import { AppContext } from "../../App";
 import SearchBar from "../common/SearchBar";
 
@@ -14,17 +12,20 @@ function NavBar () {
     const [ navigatingTo , setNavigatingTo ] = useState('')
     var navBarOptions = {
         pages : [
-            {
+            /*{
                 name: "home" ,
-            },
+            },*/
             {
                 name: "articles" ,
             },
-            {
+            /*{
                 name: "authors" ,
-            },
+            },*/
             {
                 name: "create" ,
+            },
+            {
+                name: "about" ,
             }
         ]
     }

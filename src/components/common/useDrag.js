@@ -1,10 +1,16 @@
-import React, { useState } from "react"
+import React, { useDebugValue, useState } from "react"
 
 function useDrag(initialPositions) {
     const [ positions, setPositions ] = useState(initialPositions)
     const [ dragging , setDragging] = useState(false)
     const [ prevXY , setPrevXY ] = useState()
-      
+    useDebugValue({
+      dragging,
+      ...((dragging)?{
+        x: positions[dragging].x ,
+        y: positions[dragging].y
+      }:{})
+    })
     const startDragging = (e,element) => {
       setDragging(element)
       setPrevXY([e.clientX,e.clientY])
