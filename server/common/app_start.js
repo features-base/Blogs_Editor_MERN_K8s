@@ -16,8 +16,8 @@ function getBootstrapStrings () {
       path.join(__dirname,'/../../build/asset-manifest.json')))
       .entrypoints
       .map(entryPoint => { 
-        return ((process.env.ENVIRONMENT === 'production')?
-            process.env.HOST_URL:
+        return ((process.env.HOST_ENV === 'azure')?
+            process.env.HOST_URL+'/':
             'http://localhost:3000/'
           )
           +entryPoint })
@@ -26,8 +26,12 @@ function getBootstrapStrings () {
   for (var key in process.env) {
     if(key.slice(0,5) === 'REACT')
       reactEnv[key] = process.env[key]
-      var reactEnvString = JSON.stringify(JSON.stringify(reactEnv))
   }
+  if(process.env.HOST_ENV === 'azure') {
+    reactEnv.REACT_API_URL = process.env.HOST_URL+'/api/'
+    reactEnv.REACT_HOST_URL = process.env.HOST_URL
+  }
+  var reactEnvString = JSON.stringify(JSON.stringify(reactEnv))
   var bootstrapScriptContentIntitial = 'window.env={...((window.env)?window.env:{}),...JSON.parse('+reactEnvString+')};'
   bootstrapScriptContentIntitial += 'var envScriptElement = document.currentElement;'+
     'if(envScriptElement) envScriptElement.remove();'

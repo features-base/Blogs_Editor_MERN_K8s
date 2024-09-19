@@ -10,8 +10,8 @@ router.post("/search", requestHandler.search)
 
 router.get(["/getOne/:id","/getById/:id","/:id","/getOne","/getById","/"], requestHandler.getById)
 
-router.post(["/getOne/:id","/getById/:id","/:id"], requestHandler.getById, () => { console.log('captured1') })
+router.post(["/getOne/:id","/getById/:id","/:id"], requestHandler.getById)
 
-router.post(["/getOne","/getById","/"], requestHandler.getById, () => { console.log('captured2') })
+router.post(["/getOne","/getById","/"], requestHandler.getById)
 
 module.exports = router

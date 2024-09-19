@@ -14,7 +14,6 @@ async function getSession({session:currentSession,setSession,API}) {
     //const idToken = queryFragments.get("id_token")
     var authorizationCode = queryFragments.get("code")
     if(!authorizationCode) authorizationCode = window.env.code
-    console.log('code :',authorizationCode)
     if(!authorizationCode)   
         return { state: 'loggedOut' }
     setSession({ ...currentSession , state: 'exchangingTokens' })

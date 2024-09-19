@@ -34,7 +34,6 @@ const setEnv = () => {
         process.env.REACT_API_URL?process.env.REACT_API_URL:'http://localhost:3000/api/' 
     }
   }
-  console.log(window.env,'\n',InMemoryStore.store.cache.env.REACT_GOOGLE_OAUTH2_ENDPOINT)
   InMemoryStore.publish()
 }
 
@@ -51,7 +50,6 @@ function App() {
   const API = useAPI({ session , setSession , setNotification })
   //  Loads the session state during app launch. 
   useEffect(() => { ( async () => {
-    console.log(window.location.pathname)
     setEnv()
     setRoute()
     const sessionRes = await API.getSession()

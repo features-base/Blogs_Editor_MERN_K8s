@@ -13,7 +13,6 @@ class TLS {
         var resolver,rejecter
         this.status = new Promise((resolve,reject) => { resolver=resolve; rejecter=reject })
         var key = AES.generateKey()
-        console.log('aesKey.length ='+key.length,'\naesKey =',key)
         var clientHello = {
             method: 'post',
             uri: InMemoryStore.store.cache.env.REACT_API_URL+'tlshandshake',
@@ -32,17 +31,14 @@ class TLS {
             console.log('error during clientHello\n',error)
             throw(error)
         }
-        console.log('serverHello :',serverHello)
         session.aes = { key }
         session.sessionId = serverHello.data.sessionId
-        console.log('after setting sessionId in session :\n',session)
         var data = await AES.decrypt({ 
             ciphertext:serverHello.data.payload,
             iv:serverHello.data.iv,
             authTag: serverHello.data.authTag,
             key: session.aes.key,
         })
-        console.log('serverHello.data after decryption :\n',await data)
         resolver(session.aes)
         return 
     }

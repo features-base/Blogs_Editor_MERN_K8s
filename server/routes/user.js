@@ -6,7 +6,7 @@ const queryString = require('node:querystring');
 const { UserSessions } = require('../common/session')
 var codeVerifier = generateKey(128,'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~')
 var codeChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url')
-console.dir({codeVerifier,codeChallenge})
+
 router.post("/filter", requestHandler.filter)
 
 router.post("/update", protectedRoute, requestHandler.update)
@@ -16,8 +16,9 @@ router.post("/search", requestHandler.search)
 router.get("/login", async (req,res) => {
     var authorizationUrl = "https://accounts.google.com/o/oauth2/v2/auth"
     var authorizationUri = authorizationUrl + "?"
-
-    var redirectUri = process.env.GOOGLE_OAUTH2_REDIRECT_URI
+    if(process.env.HOST_ENV === 'azure') 
+        var redirectUri = process.env.HOST_URL
+    else var redirectUri = process.env.GOOGLE_OAUTH2_REDIRECT_URI
     if(!redirectUri) redirectUri = 'https://localhost:443'
     var uriParameters = queryString.stringify({
         redirect_uri: redirectUri ,
@@ -32,7 +33,6 @@ router.get("/login", async (req,res) => {
 
     })
     authorizationUri += uriParameters
-    console.log(authorizationUri)
     return res.redirect( 303 , authorizationUri ) 
 })
 
@@ -65,8 +65,6 @@ router.post("/getGoogleOAuth2Claims", async(req,res) => {
         claims = await exchangeAuthCode({authorizationCode,codeVerifier})
     }
     catch(error) {
-        console.dir(error,{depth:5})
-        console.log('res.json :',await error.res.json())
         return res.status(500).send("Error during openid protocol execution")
     }
 
@@ -97,9 +95,7 @@ router.post("/getGoogleOAuth2Claims", async(req,res) => {
 
 const getSession = async (req,res,next) => {
     var { sessionToken , session , respond=true } = req.body;
-    console.log('before getSession :\n',session)
     const result = UserSessions.getSession({sessionToken, session})
-    console.log('getSession :\n',result)
     if (respond) {
         if(!result || !(result instanceof Object) || (!result.sessionToken)) {
             res.status(401).send("Please validate your session details. Or try reauthenticating.")

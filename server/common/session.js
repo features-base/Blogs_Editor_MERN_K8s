@@ -22,9 +22,6 @@ class UserSessions {
     }
     
     static getSession({ sessionToken , email , session }) {
-        console.log('userSessions :',this.userSessions)
-        console.log('sessionTokens :',this.sessionTokens)
-        console.log('aesKeys :',this.aesKeys)
         if(!sessionToken && session && session instanceof Object && session.sessionToken)
             sessionToken = session.sessionToken
         if(sessionToken) {
@@ -72,7 +69,6 @@ class UserSessions {
     }
 
     static loadCloudSession({sessionToken,email,cloudSession}) {
-        console.log('savedSessions :',this.savedSessions)
         if(!email) email = sessionTokens[sessionToken]
         return this.savedSessions[email]
     }

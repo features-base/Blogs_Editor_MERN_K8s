@@ -37,12 +37,13 @@ async function executeTransaction(transaction,res,options={}) {
   try {
     result = await session.withTransaction(transaction, transactionOptions);
   } catch(error) {
-    console.log('error',Object.keys(error),error.code,error.keyValue,error.keyPattern,error.index,error.errorResponse
-      ,error
-      )
     if([11000].includes(error.code)) {
+      // Handling unique constraint error
       throw error
     }
+    console.log('mongodb error',error.code,error.keyValue,error.keyPattern,error.index,error.errorResponse
+      ,error
+    )
     res.status(500).send({ message: "Database transaction aborted." })
     return false
   } finally {

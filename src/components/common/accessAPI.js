@@ -15,7 +15,6 @@ const methodConfig = {
 
     get: (options) => {
         const {resourceType, ids, sourceUri, operation} = options
-        console.log(options.cache)
         const uri = ((sourceUri)?sourceUri:(InMemoryStore.store.cache.env.REACT_API_URL+resourceType+"/"+operation+"/")) 
         if(options.method) return { method:'get' , uri } 
         return { method:'post', uri }
@@ -42,7 +41,6 @@ const methodConfig = {
 
 async function accessAPI(options) {  
     const session = options.session
-    console.log('Initiating request\noptions :\n',options)
     const originalBody = { ...options.body }
     if( ! ( options.method in ['OPTIONS','GET'] ) )
         if(options.body && options.body instanceof Object) {
@@ -70,14 +68,11 @@ async function accessAPI(options) {
                 payload: ciphertext, iv ,  
                 authTag
             }
-            console.log('Body after symmetric encryption :\n',options.body)
         }
     try {
-        console.log('Intitiating fetch request')
         var response = await request[options.method](options)    
     }
     catch (error) {
-        console.log('Error during fetch request\n',error)
         if(error.code === 'ERR_NETWORK') {
             options.setNotification({type:'error',message:'Network Error'})
             return undefined
@@ -90,7 +85,6 @@ async function accessAPI(options) {
         }
         var response = error.response
     }
-    console.log('Initiating symmetric decryption of fetch request :\n',response)
     response.data = await AES.decrypt({
         ...response.data, 
         ciphertext: response.data.payload,

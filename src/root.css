@@ -6,6 +6,7 @@
 @import "./components/common/EditableDiv.css" ;
 @import "./components/common/MenuBar.css" ;
 @import "./components/common/SearchBar.css" ;
+@import "./components/browse/About.css" ;
 @import "./components/browse/GoogleSignIn.css" ;
 @import "./components/browse/Home.css" ;
 @import "./components/browse/NavBar.css" ;

@@ -7,11 +7,15 @@ const fs = require('fs');
 const request = require('../common/https_requests')
 
 function privateDecrypt(req,res) {
-    const key = createPrivateKey(
-        fs.readFileSync(path.normalize(
-            `${__dirname}/../ssl/https/key.pem`
-        ))
-    )
+    const keyString = 
+        (process.env.HOST_ENV === 'azure')
+        ?
+            process.env.RSA_PRIVATE_KEY
+        :
+            fs.readFileSync(path.normalize(
+                `${__dirname}/../ssl/https/key.pem`
+            ))
+    const key = createPrivateKey(   keyString   )
     var decryptedPayload = 
         crypto.privateDecrypt(
         {key,padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,oaepHash:'sha256'},
@@ -64,9 +68,7 @@ function symmetricDecrypt(req,res) {
     decipher.setAuthTag(authTag,'base64')
     var decryptedPayload = decipher.update(payload, 'base64');
     decryptedPayload += decipher.final();
-    //decryptedPayload = decryptedPayload.replaceAll('�',' ')
     req.body = JSON.parse(decryptedPayload)
-    console.log('decrypted payload :',decryptedPayload)
     res.sessionId = sessionId
     req.body.sessionId = sessionId
     return
@@ -183,17 +185,15 @@ const exchangeAuthCode = async ( { authorizationCode , accessToken,codeVerifier 
             grant_type: 'authorization_code',
             redirect_uri: process.env.GOOGLE_OAUTH2_REDIRECT_URI
         }
-        console.log('tokenBody :',tokenBody)
         try {
             var tokens = await request.post({
                 uri: tokenEndpoint , body: tokenBody
             });  
         }
         catch ( error ) {
-            console.log("Unexpected error in accessing tokens from identity provider")
+            console.log("Unexpected error while accessing tokens from identity provider")
             throw error
         }
-        console.log('tokens :',tokens)
         accessToken = tokens.access_token
     }
     
@@ -202,10 +202,7 @@ const exchangeAuthCode = async ( { authorizationCode , accessToken,codeVerifier 
         header: JSON.parse(Buffer.from(splitIdToken[0],'base64').toString('ascii')),
         payload: JSON.parse(Buffer.from(splitIdToken[1],'base64').toString('ascii'))
     }
-
-    console.log('JWT :',JWT)
     const claims = JWT.payload
-    console.log('claims :',claims,"claims.email :",claims.email)
     if( !claims.email || ( typeof claims.email !== 'string' || claims.email.length === 0 ) ) {
         throw   { reason: 'Identity provider error' }
     }
@@ -327,7 +324,7 @@ const update = async (req,res,next) => {
     }
     if(result === false) return
     if(!(result.acknowledged && ( result.upsertedCount || result.matchedCount )))
-        console.log('error in update middleware \n',newEntity,"\n",result)
+        console.log('error in',resourceType,'update\n',newEntity,"\n",result)
     if(respond)
         res.send({result})
     if(next) next(result)
@@ -352,8 +349,6 @@ const search = async (req,res,next) => {
         var searchStage = { $search: searchSpecs }
     else
         var searchStage = { $search: searchSpecs.$search }
-    console.log('searchStage \n',searchStage,'\n')
-    console.log('searchStage stringify\n',JSON.stringify(searchStage),'\n')
     const results = await executeTransaction( async () => {
         const searchResults = maindb.collection(collectionName).aggregate([
             searchStage
@@ -361,7 +356,6 @@ const search = async (req,res,next) => {
         return searchResults
     }, res)
     
-    console.log("results \n")
     var searchResults = []
     
     for await (const result of results) {
@@ -370,7 +364,6 @@ const search = async (req,res,next) => {
     
     if(respond) {
         if( !searchResults.length ) res.status(200)
-        console.log('searchResults1',searchResults)
         res.send({ searchResults })
     }
     if(next) next(results)

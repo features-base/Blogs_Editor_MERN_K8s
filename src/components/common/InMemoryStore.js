@@ -9,7 +9,7 @@ class InMemoryStore {
 
     static subscribers = []
 
-    static publish = () => this.subscribers.map(handler => { console.log(handler);handler()})
+    static publish = () => this.subscribers.map(handler => handler())
     
     static subscribe = (handler) => this.subscribers.push(handler)
     

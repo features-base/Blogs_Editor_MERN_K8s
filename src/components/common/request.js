@@ -1,6 +1,5 @@
 const post = async (options) => {
     if(!options.body) options.body={}
-    console.log(options)
     const config = {
         method: options.method,//'POST',
         headers: {
@@ -16,7 +15,6 @@ const post = async (options) => {
         res = await fetch(options.uri,config)
     }
     catch (error) {
-        console.log(error)
         throw ({code:'ERR_NETWORK',name:'Network Error'})
     }
     try {
@@ -29,7 +27,6 @@ const post = async (options) => {
     if(res.status<200 || res.status>299) {
         throw { code: res.status , status:res.status, statusText: res.statusText , response: res }
     }
-    console.log(res)
     return res
 }
 

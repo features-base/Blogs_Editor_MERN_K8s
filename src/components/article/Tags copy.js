@@ -6,7 +6,8 @@ const EditableDivMemo = memo(({name,props}) => {
     return (
         <EditableDiv name={name} props={props}></EditableDiv>
     )
-},({name,props:oldProps},{props:newProps})=> {console.log(name,oldProps,newProps)
+},({name,props:oldProps},{props:newProps})=> {
+    //console.log(name,oldProps,newProps)
     //if(oldProps.content && oldProps.content.tags.length !== newProps.content.tags.length)
     //    return false
     return true

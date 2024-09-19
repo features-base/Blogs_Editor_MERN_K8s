@@ -4,14 +4,11 @@ import React, {useRef,useEffect} from "react"
 function EditableDiv({name, props: { className=' ', content, idx,tag, setContent, editable=true, editing=true, errorsProp } , enterEvent}) {
     const ref = useRef()
     //useEffect(() => {console.log(name,'first rerendering')},[])
-    console.log(name,'rerendering',content.cursor)
     useEffect(() => {
-        console.log(name,'first rerendering',content.cursor)
         if(content.cursor && content.cursor.field===name) {
             const newRange = document.createRange()
             var textDOM = ref.current.childNodes[1].firstChild
             
-            console.log('textDOM :',textDOM)
             if(textDOM === null) {
                 return;
             }
@@ -28,7 +25,6 @@ function EditableDiv({name, props: { className=' ', content, idx,tag, setContent
         var text = (e.currentTarget.textContent)?e.currentTarget.textContent:"";//<>&#8203;</>;
         var textMapping = {}
         for(let i=0;i<text.length;i++) textMapping[i] = text[i]+' '+text.charCodeAt(i).toString()
-        console.log('onInput in ',name,' ',text)
         if(setContent) setContent({
             [name]: text,
             cursor: { field: name, offset: clonedRange.startOffset } 
