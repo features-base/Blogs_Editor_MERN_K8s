@@ -21,4 +21,4 @@ jobs:
           acrName: mytestacr
           containerAppName: my-test-container-app
           resourceGroup: my-test-rg
-          azureCredentials:  ${{ secrets.AZURE_CREDENTIALS }}
+          #azureCredentials:  ${{ secrets.AZURE_CREDENTIALS }}
