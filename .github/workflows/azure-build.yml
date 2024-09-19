@@ -13,7 +13,7 @@ jobs:
         with:  
           auth-type: IDENTITY
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
+          subscription-id: 83fe0721-a84c-467f-838f-60400f5a476d
       # - name: Build and deploy Container App
       #   uses: azure/container-apps-deploy-action@v1
       #   with:
