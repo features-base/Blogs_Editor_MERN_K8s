@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Log in to Azure
         uses: azure/login@v1 
-        with: 
+        with:  
           auth-type: IDENTITY
           creds: ${{ secrets.AZURE_CREDENTIALS }}
         
