@@ -21,8 +21,9 @@ jobs:
         uses: azure/container-apps-deploy-action@v1
         with:
           appSourcePath: ${{ github.workspace }}
-          acrName: mytestacr
-          containerAppName: my-test-container-app
-          resourceGroup: my-test-rg
+          acrName: articles
+          imageToBuild: articles.azurecr.io/github/testworking
+          containerAppName: articles1
+          resourceGroup: showcase
           acrUsername: karansdexpert@gmail.com
           acrPassword: sw25@$SW
