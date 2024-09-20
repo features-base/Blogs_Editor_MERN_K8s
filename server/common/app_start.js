@@ -18,7 +18,7 @@ function getBootstrapStrings () {
       .map(entryPoint => { 
         return ((process.env.HOST_ENV === 'azure')?
             process.env.HOST_URL+'/':
-            'http://localhost:3000/'
+            'https://localhost:443/'
           )
           +entryPoint })
   

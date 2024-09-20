@@ -2,25 +2,24 @@ const { maindb, executeTransaction, ObjectId } = require('../db/mongo');
 const { UserSessions } = require("../common/session")
 const {createPrivateKey} = require('crypto') 
 const crypto = require('crypto')
-const path = require('node:path'); 
-const fs = require('fs');
 const request = require('../common/https_requests')
 
 function privateDecrypt(req,res) {
     const keyString = 
         (process.env.HOST_ENV === 'azure')
         ?
-            process.env.RSA_PRIVATE_KEY
+            JSON.parse(process.env.RSA_PRIVATE_KEY).value
         :
-            fs.readFileSync(path.normalize(
-                `${__dirname}/../ssl/https/key.pem`
-            ))
+            JSON.parse(process.env.RSA_PRIVATE_KEY).value
+            
+    console.log(keyString)
     const key = createPrivateKey(   keyString   )
     var decryptedPayload = 
         crypto.privateDecrypt(
         {key,padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,oaepHash:'sha256'},
         Buffer.from(req.body.payload,'base64'))
     var aesKey = decryptedPayload.toString()
+    console.log('aesKey',aesKey)
     var sessionId = crypto.randomBytes(8).toString('hex')
     UserSessions.setAesKey({ [sessionId] : aesKey })
     res.sessionId = sessionId
