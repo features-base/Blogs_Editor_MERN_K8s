@@ -11,8 +11,6 @@ function privateDecrypt(req,res) {
             JSON.parse(process.env.RSA_PRIVATE_KEY).value
         :
             JSON.parse(process.env.RSA_PRIVATE_KEY).value
-            
-    console.log(keyString)
     const key = createPrivateKey(   keyString   )
     var decryptedPayload = 
         crypto.privateDecrypt(
@@ -175,6 +173,11 @@ const exchangeAuthCode = async ( { authorizationCode , accessToken,codeVerifier 
     
     const tokenEndpoint = "https://oauth2.googleapis.com/token"
 
+    if(process.env.HOST_ENV === 'azure') 
+        var redirectUri = process.env.HOST_URL
+    else var redirectUri = process.env.GOOGLE_OAUTH2_REDIRECT_URI
+    if(!redirectUri) redirectUri = 'https://localhost:443'
+    
     if(authorizationCode) {
         var tokenBody = { 
             client_id: process.env.GOOGLE_OAUTH2_CLIENT_ID ,
@@ -182,7 +185,7 @@ const exchangeAuthCode = async ( { authorizationCode , accessToken,codeVerifier 
             code: authorizationCode,
             code_verifier: codeVerifier,
             grant_type: 'authorization_code',
-            redirect_uri: process.env.GOOGLE_OAUTH2_REDIRECT_URI
+            redirect_uri: redirectUri
         }
         try {
             var tokens = await request.post({
@@ -191,6 +194,7 @@ const exchangeAuthCode = async ( { authorizationCode , accessToken,codeVerifier 
         }
         catch ( error ) {
             console.log("Unexpected error while accessing tokens from identity provider")
+            console.log(error)
             throw error
         }
         accessToken = tokens.access_token
