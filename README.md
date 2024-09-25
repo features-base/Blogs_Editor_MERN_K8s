@@ -1,12 +1,12 @@
 # Articles
 
-A MERN Stack website for users to create, edit, and share articles. The built-in editor provides features to work and save your progress across sessions. The built-in search engine offers search functionalities across the entire collection of articles. 
+A MERN Stack website for users to create, edit, and share articles. The built-in editor provides features to work and save your progress across sessions. The built-in search engine offers search functionalities across the entire collection of articles.
 
 API Documentation: [/README.API.md](/README.API.md)
 
 ## Architecture
 
-The app's architecture, includes 3 tiers - server, front-end and database. The components are built based on REST and WS3 principles. The app's server is implemented using NodeJS, which facilitates building non-blocking asynchnorous, event-driven, single-threaded JS applications for high scalability, and is build on the V8 JS engine, supporting native C++ code integrationw. The server includes a HTTPS RESTful API. The front-end is built using ReactJS, which faciltates building stateful modular components. The database is implemented using MongoDB Atlas, a NoSQL DBMS with built-in search engine. The server is dockerized and deployed in a serverless Azure Container App instance.
+The app's architecture, includes 3 tiers - server, front-end and database. The components are built based on REST and WS3 principles. The app's server is implemented using NodeJS, which facilitates building non-blocking asynchnorous, event-driven, single-threaded JS applications for high scalability, and is build on the V8 JS engine, supporting native C++ code integrationw. The server includes a HTTPS RESTful API. The front-end is built using ReactJS, which faciltates building stateful modular components. The database is implemented using MongoDB Atlas, a NoSQL DBMS with built-in search engine. The server is dockerized and deployed in a serverless Azure Container App instance. The server was also deployed using Azure Kubernetes Service with multiple repicas across availability zones and regions. 
 
 ### Authentication
 
