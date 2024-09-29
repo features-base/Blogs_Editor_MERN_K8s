@@ -22,7 +22,7 @@ function GoogleSignIn () {
 
     
     return (
-        <a className="google-sign-in" href={oAuth2Endpoint}>
+        <a className="google-sign-in" aria-label='Google Sign In' name='Google Sign In' rel='external' href={oAuth2Endpoint}>
             <div className="gsi-button vertical-align">
                 <div className="gsi-button-content horizontal-align">
                     <div className="gsi-svg">

@@ -1,23 +1,23 @@
-import React , { useState,useEffect,memo } from 'react'
+import React from 'react'
 
 import EditableDiv from '../common/EditableDiv'
 
-function Tags ({ article, setArticle, editing }) {
+function Tags ({ article, articleDispatch, editing }) {
     const updateContent = (props) => {
         var name = props.cursor.field
         var idx = parseInt(props.cursor.field.slice(3))
         var newTags = [ ...article.tags ]
         newTags[idx] = props[name]
         var newCursor = props.cursor
-        setArticle({tag: { operation:'update', idx:props.cursor.idx, value: props[name] }, cursor: newCursor})
+        articleDispatch({tag: { operation:'update', idx:props.cursor.idx, value: props[name] }, cursor: newCursor})
     }
 
     function addTag () { 
-        setArticle({    tag:   {operation:'add'}   })
+        articleDispatch({    tag:   {operation:'add'}   })
     }
 
     function deleteTag (idx) { 
-        setArticle({    tag:   {operation:'delete',idx}   }) 
+        articleDispatch({    tag:   {operation:'delete',idx}   }) 
     }
     
     var tagProps = 

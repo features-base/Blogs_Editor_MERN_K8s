@@ -1,9 +1,8 @@
 import React from "react"
+
 import { App } from "./App";
 
-
-
-const AppSSR = ({ bootstrapCSS }) => {
+const SSRShell = ({ cssChunk }) => {
     return (
         <html>
             <head>
@@ -15,9 +14,7 @@ const AppSSR = ({ bootstrapCSS }) => {
                     content="A website to showcase my MERN skills"
                 />
                 <title>Articles</title>
-                {
-                    bootstrapCSS.map(cssPath => <link key={cssPath} rel="stylesheet" href={cssPath}></link>)
-                }
+                <style>{cssChunk}</style>
             </head>
             <body>
                 <div id="root">
@@ -28,4 +25,4 @@ const AppSSR = ({ bootstrapCSS }) => {
     )
 }
 
-export default AppSSR;
+export default SSRShell;

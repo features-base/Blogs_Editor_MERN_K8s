@@ -7,13 +7,21 @@ async function accessResource(options) {
     return response
 }
 
-
+/*
+    useApi hook returns the API object which can be used to access the 
+        backend API. The API checks, and updates the caches also.
+    Whenever the state variables in the props change, the hook rerenders
+        to update the API object by attacing the new state variables
+        to the requests sent through the API object.
+*/
 function useAPI({ session , setSession , setNotification }) {
 
     const API = {} 
     const attachments = {
         session, setNotification, API, setSession
     }
+
+    //  Attaches the session token to the request body
     const wrapSessionToken = (options) => {
         if(!options) options = {}
         var body = options.body

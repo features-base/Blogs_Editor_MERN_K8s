@@ -1,7 +1,5 @@
 import React, {useState,createContext,useEffect,memo,lazy,Suspense} from 'react'
 
-import './root.css';
-
 import NavBar from './components/browse/NavBar';
 import useDrag from './components/common/useDrag';
 import Notification from './components/browse/Notification';
@@ -39,6 +37,7 @@ const setEnv = () => {
 
 function App() {
   const [session,setSession] = useState({ state: 'loggedOut' })
+  
   //  This hook maintains the uri routes and navigations
   const [route,setRoute] = useRoute()
   const [ notification, setNotification ] = useState(undefined)
@@ -48,6 +47,7 @@ function App() {
 
   // This hook will attach session and other variables to the appropriate API requests 
   const API = useAPI({ session , setSession , setNotification })
+
   //  Loads the session state during app launch. 
   useEffect(() => { ( async () => {
     setEnv()

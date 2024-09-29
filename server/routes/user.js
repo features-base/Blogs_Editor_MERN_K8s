@@ -4,8 +4,7 @@ const crypto = require('crypto')
 const { generateKey , protectedRoute , exchangeAuthCode , requestHandler } = require("./middlewares")
 const queryString = require('node:querystring'); 
 const { UserSessions } = require('../common/session')
-var codeVerifier = generateKey(128,'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~')
-var codeChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url')
+const Secrets = require('../common/global_context')
 
 router.post("/filter", requestHandler.filter)
 
@@ -13,26 +12,35 @@ router.post("/update", protectedRoute, requestHandler.update)
 
 router.post("/search", requestHandler.search)
 
+//  Official OpenID Connect specification
+//      https://openid.net/specs/openid-connect-core-1_0.html
+
 router.get("/login", async (req,res) => {
-    var authorizationUrl = "https://accounts.google.com/o/oauth2/v2/auth"
-    var authorizationUri = authorizationUrl + "?"
+    const authorizationUrl = "https://accounts.google.com/o/oauth2/v2/auth"
+    const codeVerifier = generateKey(128,'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~')
+    Secrets.data.codeVerifiers[req.ip] = codeVerifier
+    const nonce = generateKey(128,'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~')
+    Secrets.data.nonces[nonce] = req.ip
+    const codeChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url')
     if(process.env.HOST_ENV === 'azure') 
         var redirectUri = process.env.HOST_URL
     else var redirectUri = process.env.GOOGLE_OAUTH2_REDIRECT_URI
     if(!redirectUri) redirectUri = 'https://localhost:443'
+    
     var uriParameters = queryString.stringify({
         redirect_uri: redirectUri ,
         client_id: process.env.GOOGLE_OAUTH2_CLIENT_ID ,
-        response_type: "code",//"id_token token",
-        //grant_type: 'pkce',
+        //  Clients should request only authorization code.
+        //      Because the data would be exposed as URI parameters.
+        response_type: "code",  
         scope: "openid profile email",
-        nonce: 'n-0S6_WzA2Mj',
+        nonce,  //  Avoids replay attacks
         display: 'popup',
-        code_challenge: codeChallenge,
+        code_challenge: codeChallenge,  //  To implement PKCE flow
         code_challenge_method: 'S256'
-
     })
-    authorizationUri += uriParameters
+    
+    const authorizationUri = authorizationUrl + "?" + uriParameters
     return res.redirect( 303 , authorizationUri ) 
 })
 
@@ -44,9 +52,10 @@ router.post("/getUserInfo", async(req,res) => {
         return {}
 })
 
+//  Submits the authorization code to the IdP in exchange for the user claims ( user info )
 router.post("/getGoogleOAuth2Claims", async(req,res) => {
     var { accessToken , idToken , authorizationCode, editing = {cloud:{},local:{}} } = req.body
-
+    console.log('request 1')
     // baseUrl will be of the form api/newEntitys/... , api/users... etc...
     const resourceType = req.baseUrl.split('/')[1]
     const collectionName = resourceType+'s'
@@ -62,9 +71,10 @@ router.post("/getGoogleOAuth2Claims", async(req,res) => {
     }
     var claims
     try {
-        claims = await exchangeAuthCode({authorizationCode,codeVerifier})
+        claims = await exchangeAuthCode({authorizationCode,reqIp:req.ip})
     }
     catch(error) {
+        console.log(error)
         return res.status(500).send("Error during openid protocol execution")
     }
 

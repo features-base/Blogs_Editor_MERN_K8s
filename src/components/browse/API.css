@@ -1,0 +1,24 @@
+.about {
+    padding: 40px;
+    max-width: 90%;
+    max-height: 70%;
+    position: relative;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.about-content {
+    overflow-y: scroll;
+}
+
+.contact {
+    position: absolute;
+    bottom: 0px;
+    display:  flex;
+    flex-direction: row;
+}
+
+.contact .key {
+    font-weight:600;
+    margin: 0px 8px;
+    color: var(--grey-darker);
+}

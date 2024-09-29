@@ -15,7 +15,8 @@
 **/node_modules
 **/npm-debug.log
 **/obj
-**/secrets.dev.yaml
+**/*secrets.dev.yaml
+**/*secret.yaml
 **/values.dev.yaml
 **/build
 **/dist
@@ -23,3 +24,5 @@
 **/*.pem
 **/*.cert
 **/*.key
+/b.js
+/test.js

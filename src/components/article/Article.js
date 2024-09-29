@@ -45,72 +45,22 @@ const defaultValues = {
       " This can be editable with a button."
 }
 
-const EditableDivMemo = memo(({name,props}) => {
-    return(
-        <EditableDiv
-            name={name}
-            props={props}
-        ></EditableDiv>
-    )
-},({props:prevProps},{name,props:newProps}) => {
-    return false
-    //return true
-    var prevArticle = prevProps.content,newArticle = newProps.content
-    console.dir({ name , prev:prevArticle[name], new:newArticle[name]
-        , saved: newProps.saved , prevArticle , newArticle
-        , prevProps , newProps
-     })
-     return false
-    if(prevProps.editing !== newProps.editing) return false
-    if(prevProps.editable !== newProps.editable) return false
-    if(prevProps.error !== newProps.error) return false
-    if(newProps.saved.cloud || newProps.saved.local 
-        || newProps.saved.committed || newProps.saved.reset) {
-            console.log('returning',(prevArticle[name] !== newArticle[name]))
-        if(prevArticle[name] !== newArticle[name]) return false
-    }
-    return true
-    if (prevArticle[name] !== newArticle[name]) return false
-    if(!prevArticle.cursor) {
-        if(!newArticle.cursor) return true;
-        return(newArticle.cursor.field !== name)
-    }
-    if(!newArticle.cursor) return true
-    if(newArticle.cursor.field != name) return true
-    if(newArticle.cursor.field !== prevArticle.cursor.field) return false
-    return(prevArticle.cursor.offset === newArticle.cursor.offset)
-})
-
-
-const TagsMemo = memo(({article,setArticle,editing}) => {
-    return (
-        <Tags 
-            article={article} 
-            setArticle={setArticle} 
-            editing={editing}
-        >
-        </Tags>
-    )
-}, ({article:oldArticle,editing:oldEditing},{article:newArticle,editing:newEditing}) => {
-    //console.log(oldArticle.tags,newArticle.tags)
-     return false
-    return (
-        oldArticle.tags.length === newArticle.tags.length
-        &&
-        oldEditing === newEditing)
-})
-
 function Article ({mode,articleId}) {
 
-    const [editing, setEditing] = useState(false);
+    //  If true, the article is in edit mode
+    const [editing, setEditing] = useState(false)
+    //  If true, the user is authorized to edit the articles. 
+    //      Toggles the menu bar
     const [editable,setEditable] = useState(false)
     const [saved,setSaved] = useState({local:false,cloud:false,committed:(mode!=='create'),reset:true,updated:((mode!=='create')?'committed':false)})
-    const [article, setArticle] = useReducer( (article,prop) => articleReducer(article,{...prop,setSaved}), defaultValues);
+    const [article, articleDispatch] = useReducer( (article,prop) => articleReducer(article,{...prop,setSaved}), defaultValues);
     const [isLoading, setIsLoading] = useState(true)
     const { session , API, uriPath, setNotification } = useContext(AppContext)
+    //  Original fetched article. Used during reset operation.
     const articleOriginal = useRef()
     const [errors,setErrors] = useState({})
 
+    //  Fetches the article during initial render
     async function loader() {
         var newArticle
             if(!articleId || articleId==='')
@@ -127,9 +77,11 @@ function Article ({mode,articleId}) {
                 setEditable(true)
             else setEditable(false)
         articleOriginal.current = { ...newArticle }
-        setArticle(articleOriginal.current)
+        articleDispatch(articleOriginal.current)
     }
 
+    //  Used when authorization changes
+    //  For example: Switching among different articles
     useEffect(() => { 
         if(mode === 'create') {
             var newArticle = defaultValues
@@ -139,7 +91,7 @@ function Article ({mode,articleId}) {
             if(session.state === 'loggedIn') 
                 article.author = session.userInfo
             articleOriginal.current = { ...newArticle }
-            setArticle(newArticle)
+            articleDispatch(newArticle)
             return
         }
         loader()
@@ -148,6 +100,8 @@ function Article ({mode,articleId}) {
     // Validates and publishes the edited article 
     const submitArticle = async () => {
         var value, errorsTemp = {}
+
+        //  Required fields cannot empty
         var requiredFields = ['title','deck']
         requiredFields.map((field,idx) => {
             value = article[field].trim()
@@ -159,10 +113,11 @@ function Article ({mode,articleId}) {
         if(Object.keys(errorsTemp).length !== 0) {
             setErrors(errorsTemp)
             if(newTags.length !== article.tags.length)
-                setArticle({ tags : { operation: 'replace', newTags } })
+                articleDispatch({ tags : { operation: 'replace', newTags } })
             return
         }
         delete article.cursor
+        
         var response = await API.accessResource({
             resourceType: 'article',
             operation: 'update',
@@ -179,8 +134,8 @@ function Article ({mode,articleId}) {
     } 
 
     const articleRef = useRef();
-    var menuOptions = useMemo(()=>getMenuOptions({session,editing,setEditing,article,setArticle,submitArticle,setNotification,API,articleOriginal,saved,setSaved}))
-    const editableDivProps = { content: article , setContent: setArticle, saved, editable, editing, errors }
+    var menuOptions = useMemo(()=>getMenuOptions({session,editing,setEditing,article,articleDispatch,submitArticle,setNotification,API,articleOriginal,saved,setSaved}))
+    const editableDivProps = { content: article , setContent: articleDispatch, saved, editable, editing, errors }
 
     if(isLoading)
         return(
@@ -202,26 +157,21 @@ function Article ({mode,articleId}) {
             }   
             <div className="header">
                 <div className="article-meta">
-                        {
-                        <TagsMemo
-                            article={article} 
-                            setArticle={setArticle} 
-                            editing={editing}
-                        >
-                        </TagsMemo>
-                        }
-                    <div className="article-id">
-                        {article.articleId}
-                    </div>
+                    <Tags
+                        article={article} 
+                        articleDispatch={articleDispatch} 
+                        editing={editing}
+                    >
+                    </Tags>
                 </div>
-                <EditableDivMemo
+                <EditableDiv
                     name="title"
                     props={editableDivProps}
-                ></EditableDivMemo>
-                <EditableDivMemo
+                ></EditableDiv>
+                <EditableDiv
                     name="deck"
                     props={editableDivProps}
-                ></EditableDivMemo>
+                ></EditableDiv>
                 <div className="more-info">
                     <div className="author">
                         { 
@@ -239,10 +189,10 @@ function Article ({mode,articleId}) {
                     </div>
                 </div>
             </div>
-            <EditableDivMemo
+            <EditableDiv
                 name="body"
                 props={editableDivProps}
-            ></EditableDivMemo>
+            ></EditableDiv>
         </div>
     )
 }

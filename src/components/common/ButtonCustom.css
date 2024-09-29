@@ -37,13 +37,16 @@
     outline: 2px solid var(--grey-focus);
 }
 
-.button-custom .hoverText {
+.hover-text {
     position: absolute;
+    z-index: 20;
     bottom: -150%;
     padding: 10px 5px;
     color: black;
     background-color: white;
     box-shadow: 1px 1px 5px black;
+    /*box-shadow: inset -1px -1px 4px rgb(0, 81, 255);
+    */
     text-align: center;
     white-space: nowrap;
     font-size: medium;

@@ -1,3 +1,4 @@
+//  Wrapper around fetch for post request
 async function post (options) {
   if(typeof options === 'string' || options instanceof String)
     options = { uri: options , body:{} }
@@ -5,7 +6,6 @@ async function post (options) {
       method: 'POST',
       body: JSON.stringify(options.body),
       headers: {
-          //'Content-type': 'application/json; charset=UTF-8',
           'Content-type': 'application/json',
       },
   })
@@ -16,6 +16,7 @@ async function post (options) {
   throw ({name:'res not ok',res})
 }
 
+//  Wrapper around fetch for get request
 async function get (options) {
   if(typeof options === 'string' || options instanceof String)
     options = { uri: options }

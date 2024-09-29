@@ -22,15 +22,11 @@
 
 .header {
     padding: 0px;
-    outline-top: 2px solid black;
-    outline-bottom: 2px solid black; 
-    outline-bottom: 2px solid rgb(255, 255, 255); 
-    outline-top: None;
 }
 
 .title {
-    font-family:'Times New Roman', Times, serif;
-    font-size: 32px;
+    font-family:var(--title-font-family);
+    font-size: var(--title-font-size);
     font-weight: 500;
     margin: 8px 0px 5px;
     padding: 10px;
@@ -42,8 +38,6 @@
     text-align: left;
     margin: 0px 0px 4px;
     padding: 4px 10px;
-    outline-top: 2px solid rgb(255, 255, 255);
-    outline-bottom: 2px solid rgb(255, 255, 255); 
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
 }
 
@@ -66,8 +60,8 @@
     text-align: left;
     margin-top: 8px;
     padding: 10px 10px;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size: 16.4px;
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size);
 }
 .roboto-font {
     font-family: "Roboto", sans-serif;

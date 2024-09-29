@@ -2,12 +2,21 @@ const { createHmac , randomBytes } = require('node:crypto');
 
 class UserSessions {
 
+    //  maps session tokens to email ids
     static sessionTokens = {}
+
+    //  maps email ids to session information
     static userSessions = {}
+    
+    //  maps email ids to sessions saved by users
     static savedSessions = {}
+    
+    //  maps session ids to AES keys
     static aesKeys = {}
 
     static createSession(session) {
+        
+        //  Generating sessionToken
         var hmac = createHmac('sha256',randomBytes(16))
         hmac.update(JSON.stringify(session))
         session.sessionToken = hmac.digest().toString('hex')
@@ -60,6 +69,7 @@ class UserSessions {
         delete this.userSessions[email]
     }
 
+    //  Save user editting session
     static saveCloudSession({ email , sessionToken , session , cloudSession }) {
         var userSession = this.getSession({email,sessionToken,session})
         if(!userSession) return
@@ -68,6 +78,7 @@ class UserSessions {
         return true
     }
 
+    //  Load user editing session
     static loadCloudSession({sessionToken,email,cloudSession}) {
         if(!email) email = sessionTokens[sessionToken]
         return this.savedSessions[email]

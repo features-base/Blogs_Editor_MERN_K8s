@@ -1,16 +1,25 @@
-.about {
+.doc {
     padding: 40px;
     max-width: 90%;
     max-height: 70%;
     position: relative;
 }
 
-.about-content {
+.doc-content {
+    border-radius: 8px;
     overflow-y: scroll;
+    padding-left: 16px;
+    padding-bottom: 16px;
+    box-shadow: 0px 0px 4px black;
+}
+
+.doc h1, .doc h2, .doc h3 {
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
 }
 
 .contact {
     position: absolute;
+    padding: 5px;
     bottom: 0px;
     display:  flex;
     flex-direction: row;

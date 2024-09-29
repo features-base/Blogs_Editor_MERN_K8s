@@ -1,9 +1,16 @@
 import React, { useDebugValue, useState } from "react"
 
+//  Maintains every draggable components concerning the whole app layout
 function useDrag(initialPositions) {
+
+    //  The positions of every draggable component
     const [ positions, setPositions ] = useState(initialPositions)
+    
+    //  The component being dragged
     const [ dragging , setDragging] = useState(false)
+    
     const [ prevXY , setPrevXY ] = useState()
+    
     useDebugValue({
       dragging,
       ...((dragging)?{

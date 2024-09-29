@@ -4,7 +4,12 @@ const https = require('https');
 
 var PORT = process.env.PORT
 
-if (process.env.HOST_ENV === 'azure') {
+if (  process.env.HOST_ENV === 'azure' 
+  ||  process.env.HTTPS === false
+  //||  true //  Can be used when process.env is not working 
+) {
+  
+  //  HTTP listener
   if(!PORT) PORT = 80
   app.listen(PORT, () => {
     console.log("App is running on http://localhost:"+PORT);
@@ -13,6 +18,7 @@ if (process.env.HOST_ENV === 'azure') {
   });  
 }
 else  {
+  //  HTTPS listener
   if(!PORT) PORT = 443
   const server = https.createServer({
     key: fs.readFileSync(`${__dirname}/ssl/https/key.pem`, 'utf8'),

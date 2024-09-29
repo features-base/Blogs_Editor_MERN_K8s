@@ -1,4 +1,4 @@
-function getMenuOptions({session,editing,setEditing,article,setArticle,submitArticle,setNotification,API,articleOriginal,saved,setSaved}) {
+function getMenuOptions({session,editing,setEditing,article,articleDispatch,submitArticle,setNotification,API,articleOriginal,saved,setSaved}) {
     
     function saveToLocalStorage () {
         session.editing.local[article._id] = article
@@ -20,7 +20,7 @@ function getMenuOptions({session,editing,setEditing,article,setArticle,submitArt
         if(!articleLocal || !(article instanceof Object || !articleLocal._id)) 
             return
         session.editing.local[article._id] = { ...articleLocal }
-        setArticle({ ...articleLocal,type:'local'},)
+        articleDispatch({ ...articleLocal,type:'local'},)
         setSaved(saved => { return {...saved,local:true,updated:'local'} })                        
     }
 
@@ -46,7 +46,7 @@ function getMenuOptions({session,editing,setEditing,article,setArticle,submitArt
                     selected: saved.reset,
                     hoverText: "Click to reset the article",
                     handler: ()=>{
-                        setArticle({ ...articleOriginal.current , type: 'reset' })
+                        articleDispatch({ ...articleOriginal.current , type: 'reset' })
                     },
                     svg: {
                         pathD:[
@@ -115,7 +115,7 @@ function getMenuOptions({session,editing,setEditing,article,setArticle,submitArt
                             return
                         }
                         setNotification({type:'success', message:'Successfully loaded the session from cloud'})
-                        setArticle({ type:'cloud' , ...response.data.cloudSession[(article._id)?article._id:'create'] })
+                        articleDispatch({ type:'cloud' , ...response.data.cloudSession[(article._id)?article._id:'create'] })
                         setSaved({...saved,updated:'cloud'})
                     },
                     svg: {

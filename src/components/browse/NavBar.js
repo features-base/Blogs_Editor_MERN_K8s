@@ -26,7 +26,10 @@ function NavBar () {
             },
             {
                 name: "about" ,
-            }
+            },
+            //{
+            //    name: "api" ,
+            //}
         ]
     }
     

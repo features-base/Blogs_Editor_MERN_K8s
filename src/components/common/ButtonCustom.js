@@ -34,14 +34,14 @@ function ButtonCustom ({ option }) {
             {(hovering)?
                 (option.disabled)?
                     ((option.disabledHoverText)?
-                        <div className="hoverText">
+                        <div className="hover-text">
                             { option.disabledHoverText }
                         </div>
                     :
                         <></>)
                 :
                 (option.hoverText)?
-                    <div className="hoverText">
+                    <div className="hover-text">
                         { option.hoverText }
                     </div>
                     :<></>

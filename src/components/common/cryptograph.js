@@ -2,7 +2,7 @@ var RSA_PUBLIC_KEY=process.env.RSA_PUBLIC_KEY
 if(!RSA_PUBLIC_KEY) 
     RSA_PUBLIC_KEY='MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4EkjwJnkK/6XYMT5MpVufioLMDZhVDd3ekX8N2ZdgxfCZcVwdDAJCUJGhhYNYYj+Y1yz5iEqTQ10r/5MT9bKQE4osqtkIFqi9hFaFZmakLFZbaTNCPrHK0STC2EVg21ZmGEPRX+dM9mCPq1dOrEg4JjsB7NuGzrtM4FnSs6y7yZ3VpWRYDVLkPbY5v4LYxCopE2ojJUP2CUUDjyAqzj1S+J4J6rxqe5C2KDCdbUr2avdP4+25osBAo2KGN6YCJIvgMC1MpQkyAEf3mPmBRJtH2SDsZlou9MBdDTsfudX+jmAtpeiTBeDNCWQdNdAV6y7XocGDgKdOPlP/VcHV8LkkwIDAQAB'
 
-function strToBuffer(str) {
+function strToTypedArray(str) {
     var buffer = new Uint8Array( new ArrayBuffer(str.length) )
     for(var i=0;i<str.length;i++) 
         buffer[i] = str.charCodeAt(i)
@@ -11,10 +11,10 @@ function strToBuffer(str) {
 
 function base64ToBuffer(b64Str) {
     var str = window.atob(b64Str)
-    return strToBuffer(str)
+    return strToTypedArray(str)
 }
 
-function bufferToBase64(buffer) {
+function typedArrayToBase64(buffer) {
     var bufferArray = new Uint8Array(buffer)
     var binary = ''
     for(var i=0;i<bufferArray.length;i++)
@@ -31,8 +31,8 @@ async function publicEncrypt({ secret }) {
     var encrypted = await window.crypto.subtle.encrypt(
         {name:'RSA-OAEP',hash:'SHA-256'},
         publicKey,
-        strToBuffer(secret))
-    var encryptedBase64 = bufferToBase64(encrypted)
+        strToTypedArray(secret))
+    var encryptedBase64 = typedArrayToBase64(encrypted)
     return encryptedBase64
 };
 
@@ -51,7 +51,7 @@ class AES {
     static async importKey(key=this.generateKey()) {
         return await crypto.subtle.importKey(
             "raw",
-            strToBuffer(key),
+            strToTypedArray(key),
             {
                 name: "AES-GCM",
                 length: 256,
@@ -62,23 +62,20 @@ class AES {
     }
 
     static async encrypt({ secret , iv = this.generateKey(16) , key }) {
-        //console.log('Initiating aes.encrypt','secret :',secret,'iv :',iv,'session :',session)
         secret = JSON.stringify(secret)
         const ciphertext = await crypto.subtle.encrypt(
             {
                 name: "AES-GCM",
-                iv: strToBuffer(iv),
+                iv: strToTypedArray(iv),
                 tagLength : 128
             },
             await this.importKey(key),
-            strToBuffer(secret)
+            strToTypedArray(secret)
         );
         
-        //console.log("aes.encrypt completed \ncipherText :",ciphertext,bufferToBase64(ciphertext),
-        //   "authTag :", bufferToBase64(base64ToBuffer(bufferToBase64(ciphertext))),'iv :',iv)
         return {
-            ciphertext: bufferToBase64(ciphertext.slice(0, ciphertext.byteLength - 16)),
-            authTag: bufferToBase64(ciphertext.slice(ciphertext.byteLength - 16)),
+            ciphertext: typedArrayToBase64(ciphertext.slice(0, ciphertext.byteLength - 16)),
+            authTag: typedArrayToBase64(ciphertext.slice(ciphertext.byteLength - 16)),
             iv,
         };
     };
@@ -90,7 +87,7 @@ class AES {
         const cleartext = await crypto.subtle.decrypt(
             {
                 name: "AES-GCM",
-                iv: strToBuffer(iv),
+                iv: strToTypedArray(iv),
                 tagLength: 128
             },
             key,
@@ -99,7 +96,6 @@ class AES {
 
         const secret = new TextDecoder().decode(cleartext);
         
-        //console.log("aes.decrypt completed \nsecret :",secret,bufferToBase64(cleartext),'iv :',iv)
         return JSON.parse(secret);
     };
 
@@ -116,7 +112,7 @@ async function testAes() {
     console.log('Initiating aes testing','secret :',secret,'key :',key,'iv :',iv,'session :',session)
     var { ciphertext, iv, authTag } = await AES.encrypt({secret,iv,session})
     console.log('ciphertext =',ciphertext)
-    console.log(base64ToBuffer(ciphertext),bufferToBase64(base64ToBuffer(ciphertext)))
+    console.log(base64ToBuffer(ciphertext),typedArrayToBase64(base64ToBuffer(ciphertext)))
     var decrypted = await AES.decrypt({ciphertext,iv,authTag,session})
     console.log('decrypted =', decrypted)
 }

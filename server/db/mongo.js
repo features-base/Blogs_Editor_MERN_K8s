@@ -1,31 +1,50 @@
 const path = require('path')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
-const credentials = path.normalize(
-        __dirname+'/../ssl/mongodb_atlas/X509-cert-8376828078522052159.pem'
-)
+//  Authenticating to MongoDB
+const client = 
+  (process.env.HOST_ENV === 'azure')
+  ?
+    //  Credential authentication
+    new MongoClient(process.env.MONGODB_CONNECT_URI, {
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: false,
+        deprecationErrors: true,
+      }
+    })
+  : 
+    //  TLS certificate authentication
+    new MongoClient('mongodb+srv://dbspace.sf733.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority&appName=dbspace', {
+      tlsCertificateKeyFile: path.normalize(
+        __dirname+'/../ssl/mongodb_atlas/X509-cert.pem'
+      ),
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: false,
+        deprecationErrors: true,
+      }
+    });
 
-const client = new MongoClient('mongodb+srv://dbspace.26sm1sl.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority&appName=dbspace', {
-  tlsCertificateKeyFile: credentials,
-  serverApi: ServerApiVersion.v1
-});
-
+//  Establishes TLS connection with MongoDB
 async function run() {
   
   try {
     await client.connect();
     console.log("connected to MongoDB Atlas")
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return
   }
 
 }
 
+//  Handles the MongoDB transaction execution logics
 async function executeTransaction(transaction,res,options={}) {
 
   const session = client.startSession();
   
+  //  Setting the mongos transaction settings
   const transactionOptions = {
     readPreference: 'primary',
     readConcern: { level: 'local' },
@@ -34,26 +53,30 @@ async function executeTransaction(transaction,res,options={}) {
   };
   
   var result
+  
   try {
     result = await session.withTransaction(transaction, transactionOptions);
-  } catch(error) {
+  } 
+  catch(error) {
     if([11000].includes(error.code)) {
-      // Handling unique constraint error
+        // Handling unique constraint error
       throw error
     }
-    console.log('mongodb error',error.code,error.keyValue,error.keyPattern,error.index,error.errorResponse
-      ,error
-    )
+    console.log('MongoDB transaction error ////\n',error)
     res.status(500).send({ message: "Database transaction aborted." })
     return false
-  } finally {
+  } 
+  finally {
     await session.endSession();
   }
+
   return result
 }
 
+//  Connecting to MondoDB
 run();
  
+//  The 'main' database contains 'users' and 'articles' collections
 const maindb = client.db("main");
 
 module.exports = { maindb , executeTransaction , ObjectId }

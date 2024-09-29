@@ -2,7 +2,7 @@ import InMemoryStore from '../common/InMemoryStore';
 
 const  cache=InMemoryStore.store.cache
 
-async function getArticle ({articleId,session,API}) {
+async function getArticle ({articleId,API}) {
     if(articleId === undefined) {
         const location = window.location;
         const queryParams = new URLSearchParams(location);
@@ -10,9 +10,11 @@ async function getArticle ({articleId,session,API}) {
         if(!articleId || articleId === "" && articleId!=="undefined")   
             return 'error'    
     }
+    //  Checking im-memory cache
     if(cache && cache.articles[articleId] !== undefined && cache.articles[articleId] !== 'undefined') {
         return cache.articles[articleId]
     }
+    //  Checking local storage
     var article = window.localStorage.getItem(articleId)
     if(!article || article==="" || article==="undefined") {
         article = undefined
@@ -20,6 +22,7 @@ async function getArticle ({articleId,session,API}) {
     if(article !== undefined)
         article = JSON.parse(article)
     if(!article || article === undefined || article==='undefined') {
+        //  Fetching from backend API
         var res = await API.accessResource({
             resourceType: 'article',
             operation: 'getOne',
@@ -31,11 +34,13 @@ async function getArticle ({articleId,session,API}) {
         if(!article)
             return
     }
+    //  Storing local storage and in-memory cache
     window.localStorage.setItem( articleId , JSON.stringify(article) )
     cache.articles[articleId] = article
     return article
 }
 
+//  To search through the database
 async function getArticles ({searchTerm,author,session,API}) {
     if(author) 
         if(author instanceof String) author={   name:   author  }
