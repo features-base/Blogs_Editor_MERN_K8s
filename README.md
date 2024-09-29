@@ -25,9 +25,8 @@ Google SSO is performed using OIDC with PKCE flow, in which the user is redirect
 
 ### Performance and Caching
 
-The app has no third-party dependencies, thus reducing the size of the built scripts. So, when users open the website, network load and latency are reduced while downloading the web app. In addition, the server combines server-side rendering with client-side rendering to reduce the website load time. Code splitting implemented through lazy loading minimizes the time taken before the client's device can display the initial screen of the website. Built script chunks are named with a hash of their contents, thus allowing the browsers to cache the chunk files.
-
-The React UI is optimized with hooks such as useMemo, useCallback, and APIs such as memo to make functionalities like dragging, editing, drawing, etc... seamless and responsive. These hooks provide mechanisms for caching rendered components, thus preventing unnecessary rerenders even when the state of the components or the states of any of the components' ancestors change.
+The app has no third-party dependencies, thus reducing the size of the built scripts to lesser than 200kB. So, when users open the website, network load and latency are reduced while downloading the web app. The server combines server-side rendering with client-side rendering to reduce the initial page load time and FCP. Code splitting implemented through lazy loading minimizes the network latency during page load. Built script chunks are named with a hash of their contents, thus allowing the browsers to cache the chunk files.
+The React UI is optimized with hooks such as useMemo, useCallback, and APIs such as memo to make functionalities like dragging, editing, drawing, etc... seamless and responsive. These hooks provide mechanisms for caching rendered components, thus preventing unnecessary rerenders even when the state of the components or the states of any of the components' ancestors change. 
 
 The UI provides efficiency and reduces latency while accessing data using different caching mechanisms. It accesses the recently cached data during the same session through an in-memory cache, while accessing the earlier or past sessions' cached data through a more persistent local storage. It stores large files like images in the browsers' IndexedDB which is also a persistent storage.
 
