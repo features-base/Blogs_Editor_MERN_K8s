@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: nodejs-container
-        image: localhost:5000/articles-image
+        image: articles.azurecr.io/github/app
         imagePullPolicy: Always
         ports:
         - containerPort: 80

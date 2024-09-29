@@ -4,7 +4,7 @@ const crypto = require('crypto')
 const { generateKey , protectedRoute , exchangeAuthCode , requestHandler } = require("./middlewares")
 const queryString = require('node:querystring'); 
 const { UserSessions } = require('../common/session')
-const Secrets = require('../common/global_context')
+const Secrets = require('../common/secrets')
 
 router.post("/filter", requestHandler.filter)
 
