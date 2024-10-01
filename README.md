@@ -25,14 +25,14 @@ Google SSO is performed using OIDC with PKCE flow, in which the user is redirect
 
 ### Performance and Caching
 
-The app has no third-party dependencies, thus reducing the size of the built scripts to lesser than 200kB. So, when users open the website, network load and latency are reduced while downloading the web app. The server combines server-side rendering with client-side rendering to reduce the initial page load time and FCP. Code splitting implemented through lazy loading minimizes the network latency during page load. Built script chunks are named with a hash of their contents, thus allowing the browsers to cache the chunk files.
+The app has no third-party dependencies, thus reducing the size of the built scripts to lesser than 200 KB. So, when users open the website, network load and latency are reduced while downloading the web app. The server combines server-side rendering with client-side rendering to reduce the initial page load time and FCP. Code splitting implemented through lazy loading minimizes the network latency during page load. Built script chunks are named with a hash of their contents, thus allowing the browsers to cache the chunk files.
 The React UI is optimized with hooks such as useMemo, useCallback, and APIs such as memo to make functionalities like dragging, editing, drawing, etc... seamless and responsive. These hooks provide mechanisms for caching rendered components, thus preventing unnecessary rerenders even when the state of the components or the states of any of the components' ancestors change. 
 
 The UI provides efficiency and reduces latency while accessing data using different caching mechanisms. It accesses the recently cached data during the same session through an in-memory cache, while accessing the earlier or past sessions' cached data through a more persistent local storage. It stores large files like images in the browsers' IndexedDB which is also a persistent storage.
 
 The app utilizes the performance API of client agents, to ensure that the users are provided with the optimal performance. Whenever the users experience any issues like slowness, or unexpected layout-shifts, the app reports, and logs the event. 
 The app also logs every request made by the users along with details about the user's device ( memory, os, ip ), client-agent ( browser ), network connection ( bandwidth, RTT, ECT ), preferences ( color , language ), etc...
-These reports and logs are analysed to solve issues, and improve user experience.
+These reports and logs are analysed to solve issues, and improve the user experience.
 
 ### Design Patterns and Coding Standards
 
@@ -47,7 +47,7 @@ The singleton class UserSessions maintains the session information of every user
 
 ### DBMS
 
-The entire dataset is replicated across 3 nodes to increase availability and fault tolerance. The database collections are maintained by unique indexes to provide fast access and implement schema constraints. The Lucene-based search engine and aggregation pipelines allow customizable search and data processing queries. Transaction management is done for every query. Write and read concerns ensure reliability, consistency, and availability of data in real-time across regions. NoSQL database allows flexible schema, to support updations in app functionalities.
+The entire dataset is replicated across 3 nodes to improve availability, and partition tolerance. The database collections are maintained by unique indexes to provide fast access. and implement schema constraints. The Lucene-based search engine and aggregation pipelines allow customizable search and data processing queries. Transaction management is done for every query. Write and read concerns ensure reliability, consistency, and availability of data in real-time across regions. NoSQL database allows flexible schema, to support improvements in app functionalities.
 IndexedDB, local storage, and in-memory data stores are used to manage data in clients' devices, based on the required data persistency, performance, speed, and efficiency.
 
 ### Deployment and Containerization
