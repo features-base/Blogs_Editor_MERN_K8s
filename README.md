@@ -14,7 +14,7 @@ The app supports Google SSO authentication to ensure that the articles published
 
 ### Security and Privacy
 
-The Node.js server supports TLS handshake using SHA-256 (asymmetric) and AES-256-GCM (symmetric) encryptions along with key rotation during every request.
+The Node.js server cannot be accessed without HTTPS. In addition, the Node.js server provides dedicated APIs for TLS handshake using SHA-256 (asymmetric) and AES-256-GCM (symmetric) encryptions along with key rotation during every request.
 This mechanism ensures privacy by allowing the client and the server to encrypt their communication payloads, thus preventing data leaks while transmitting packets through public or vulnerable networks. This ensures protection from packet sniffing attacks such as man-in-the-middle attacks. The key rotation avoids replay attacks.
 
 The web app doesn't use cookies to store personal data such as session tokens, symmetric encryption keys, user info provided by the OAuth2 identity provider, etc... This ensures protection against CSRF ( Cross-site request forgery ) attacks.
@@ -29,6 +29,10 @@ The app has no third-party dependencies, thus reducing the size of the built scr
 The React UI is optimized with hooks such as useMemo, useCallback, and APIs such as memo to make functionalities like dragging, editing, drawing, etc... seamless and responsive. These hooks provide mechanisms for caching rendered components, thus preventing unnecessary rerenders even when the state of the components or the states of any of the components' ancestors change. 
 
 The UI provides efficiency and reduces latency while accessing data using different caching mechanisms. It accesses the recently cached data during the same session through an in-memory cache, while accessing the earlier or past sessions' cached data through a more persistent local storage. It stores large files like images in the browsers' IndexedDB which is also a persistent storage.
+
+The app utilizes the performance API of client agents, to ensure that the users are provided with the optimal performance. Whenever the users experience any issues like slowness, or unexpected layout-shifts, the app reports, and logs the event. 
+The app also logs every request made by the users along with details about the user's device ( memory, os, ip ), client-agent ( browser ), network connection ( bandwidth, RTT, ECT ), preferences ( color , language ), etc...
+These reports and logs are analysed to solve issues, and improve user experience.
 
 ### Design Patterns and Coding Standards
 
