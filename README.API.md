@@ -1,48 +1,5 @@
 ## API Specification ( Application Programming Interface Specification)
 
-## TLS - Transport Layer Security
-
-To manage TLS sessions in addition to the existing HTTPS protocol.
-
-<h3>/api/tls/handshake</h3> 
-<pre>
-To establish a TLS session through TLS handshake.
-<b>Methods Allowed :</b> POST
-<b>Content-Type :</b> application/json 
-<b>Body :</b>  
-  <b>encryption :</b> The encryption method used. It must be set to "public" for this client hello.
-  <b>payload :</b> 256 byte AES key encrypted using the public key of the TLS certificate 
-<b>Response :</b> The server hello
-  <b>200 :</b> Session has been successfully established 
-      <b>data :</b>  
-        <b>sessionId :</b> A newly created generated unique session id 
-        <b>ciphertext :</b> An empty JSON object encrypted using the AES key 
-        <b>iv :</b> Initialization Vector
-        <b>authTag :</b> AES-256-GCM auth tag for the ciphertext 
-</pre>
-
-## Symmetric Encryption
-
-<h3>/api/** (Any resource)</h3> - This is a general specification applicable across all the APIs
-<pre>
-To use the AES key after the TLS handshake
-<b>Methods Allowed :</b> POST/PUT/DELETE
-<b>Content-Type :</b> application/json 
-<b>Body :</b>  
-  <b>sessionId :</b> The session ID generated during the TLS handshake 
-  <b>iv :</b> AES-256-GCM Initialization Vector for the payload
-  <b>authTag :</b> AES-256-GCM auth tag for the payload
-  <b>payload :</b> The actual body for the underlying API, but encrypted using the AES key 
-<b>Response :</b>
-  <b>419 :</b> The TLS session has expired. Please initiate a new TLS handshake.
-  <b>** :</b> Refer the specification of the underlying API to understand the status code
-      <b>data :</b>  
-        <b>sessionId :</b> A newly created generated unique session id 
-        <b>ciphertext :</b> The actual response data of the underlying API, but encrypted using the AES key 
-        <b>iv :</b> AES-256-GCM Initialization Vector for the ciphertext 
-        <b>authTag :</b> AES-256-GCM auth tag for the ciphertext 
-</pre>
-
 ## User Authentication 
 
 For resources that require authentication, session token must be provided. 
@@ -183,4 +140,47 @@ To delete an article
   <b>422 :</b> Invalid id
   <b>409 :</b> There is no article with the specified id
   <b>500 :</b> Internal server error
+</pre>
+
+## TLS - Transport Layer Security
+
+To manage additional TLS sessions, on top of the TLS session within the HTTPS protocol.
+
+<h3>/api/tls/handshake</h3> 
+<pre>
+To establish a TLS session through TLS handshake.
+<b>Methods Allowed :</b> POST
+<b>Content-Type :</b> application/json 
+<b>Body :</b>  
+  <b>encryption :</b> The encryption method used. It must be set to "public" for this client hello.
+  <b>payload :</b> 256 byte AES key encrypted using the public key of the TLS certificate 
+<b>Response :</b> The server hello
+  <b>200 :</b> Session has been successfully established 
+      <b>data :</b>  
+        <b>sessionId :</b> A newly created generated unique session id 
+        <b>ciphertext :</b> An empty JSON object encrypted using the AES key 
+        <b>iv :</b> Initialization Vector
+        <b>authTag :</b> AES-256-GCM auth tag for the ciphertext 
+</pre>
+
+## Symmetric Encryption
+
+<h3>/api/** (Any resource)</h3> - This is a general specification applicable across all the APIs
+<pre>
+To use the AES key after the TLS handshake
+<b>Methods Allowed :</b> POST/PUT/DELETE
+<b>Content-Type :</b> application/json 
+<b>Body :</b>  
+  <b>sessionId :</b> The session ID generated during the TLS handshake 
+  <b>iv :</b> AES-256-GCM Initialization Vector for the payload
+  <b>authTag :</b> AES-256-GCM auth tag for the payload
+  <b>payload :</b> The actual body for the underlying API, but encrypted using the AES key 
+<b>Response :</b>
+  <b>419 :</b> The TLS session has expired. Please initiate a new TLS handshake.
+  <b>** :</b> Refer the specification of the underlying API to understand the status code
+      <b>data :</b>  
+        <b>sessionId :</b> A newly created generated unique session id 
+        <b>ciphertext :</b> The actual response data of the underlying API, but encrypted using the AES key 
+        <b>iv :</b> AES-256-GCM Initialization Vector for the ciphertext 
+        <b>authTag :</b> AES-256-GCM auth tag for the ciphertext 
 </pre>
