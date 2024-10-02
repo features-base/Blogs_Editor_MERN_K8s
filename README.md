@@ -21,7 +21,7 @@ The web app doesn't use cookies to store personal data such as session tokens, s
 
 The app has no third-party dependencies, and the entire app is built from scratch, thus offering protection from third-party vulnerabilities. This also provides reliability against third-party deprecations.
 
-Google SSO is performed using OIDC with PKCE flow, in which the user is redirected to Google SSO provider's consent screen, where the users can securely provide their consent, after which the SSO provider would send an authorization code to the app through a url query parameter. The app server submits the code along with a secret, and the code verifier (both of which are required to get authorized by the IdP) to the SSO provider to get the user info. The secret, and the code verifier are never revealed publicly, thus preventing packet sniffers from utilizing the authorization code. In addition the IdP's reponse is verified by the nonce provided by the IdP, thus preventing the authorization code, or the IdP's response getting tampered while in transit through public networks.
+Google SSO is performed using OIDC with PKCE flow, in which the user is redirected to Google SSO provider's consent screen, where the users can securely provide their consent, after which the SSO provider would send an authorization code to the app through a url query parameter. The app server submits the code along with a secret, and the code verifier (both of which are required to get authorized by the IdP) to the SSO provider to get the user info. The secret, and the code verifier are never revealed publicly, thus preventing packet sniffers from utilizing the authorization code. In addition the IdP's reponse is verified by the nonce provided by the IdP, thus preventing the authorization code, or the IdP's response getting tampered while the packets are in transit through public networks.
 
 ### Performance and Caching
 
@@ -47,7 +47,7 @@ The singleton class UserSessions maintains the session information of every user
 
 ### DBMS
 
-The entire dataset is replicated across 3 nodes to improve availability, and partition tolerance. The database collections are maintained by unique indexes to provide fast access. and implement schema constraints. The Lucene-based search engine and aggregation pipelines allow customizable search and data processing queries. Transaction management is done for every query. Write and read concerns ensure reliability, consistency, and availability of data in real-time across regions. NoSQL database allows flexible schema, to support improvements in app functionalities.
+The entire dataset is replicated across 3 nodes to improve availability, and partition tolerance. The database collections are maintained by unique indexes to provide fast access. and implement schema constraints. The Lucene-based search engine and aggregation pipelines allow customizable search and data processing queries. Transaction management is done for every query. Write and read concerns ensure reliability, consistency, and availability of data in real-time across regions. NoSQL database allows flexible schema, to support improvements in app functionalities.  Request logs and usage metrics logs are collected and stored in the NoSQL database.
 IndexedDB, local storage, and in-memory data stores are used to manage data in clients' devices, based on the required data persistency, performance, speed, and efficiency.
 
 ### Deployment and Containerization
