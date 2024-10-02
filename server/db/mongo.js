@@ -79,4 +79,4 @@ run();
 //  The 'main' database contains 'users' and 'articles' collections
 const maindb = client.db("main");
 
-module.exports = { maindb , executeTransaction , ObjectId }
+module.exports = { client , maindb , executeTransaction , ObjectId }

@@ -64,6 +64,7 @@
 
 .menuOptions {
     position: absolute;
+    z-index: 25px;
     right: 0px;
     padding: 5px;
     top: 0px;

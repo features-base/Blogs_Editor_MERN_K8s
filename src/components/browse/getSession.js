@@ -25,7 +25,7 @@ async function getSession({session:currentSession,setSession,API}) {
         return { state: 'loggedOut' }
     setSession({ ...currentSession , state: 'exchangingTokens' })
     
-    //  Submiiting the Authorization code
+    //  Submiiting the Authorization code to backend API
     var res = await API.accessResource({
         resourceType: 'user',
         operation: 'getGoogleOAuth2Claims',

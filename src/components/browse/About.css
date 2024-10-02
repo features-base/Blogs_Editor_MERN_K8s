@@ -10,11 +10,29 @@
     overflow-y: scroll;
     padding-left: 16px;
     padding-bottom: 16px;
+    padding-top: 16px;
     box-shadow: 0px 0px 4px black;
 }
 
-.doc h1, .doc h2, .doc h3 {
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+.doc .title { margin-bottom: 0px; }
+
+.title.h1   {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.title.h2   {
+    font-size: 30px;
+}
+
+.title.h3   {
+    font-size: 26px;
+}
+
+.doc .body {
+    margin-top: 0px;
+    padding-top: 0px;
+    text-indent: 4ch;
 }
 
 .contact {

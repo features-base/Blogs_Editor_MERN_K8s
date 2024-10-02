@@ -9,6 +9,7 @@ express.response.statusText = function (statusText) {
 
 const articleRouter = require("./routes/article")
 const userRouter = require("./routes/user")
+const logRouter = require("./routes/log")
 const app = express()
 const { rsa, configureResponse: {global} , isAuthenticated } = require("./routes/middlewares")
 
@@ -22,6 +23,15 @@ app.use(rsa.decryptPayload)
 app.use((req,res,next) => {
     console.log('request recieved :\noriginalUri =',req.originalUrl,'\nrequest recieved :\nreq.body =',req.body)
     next()
+    const entry = {
+        type:   'request' ,
+        ip: req.ip  ,
+        method: req.method  ,
+        host:   req.hostname ,
+        originalUri:    req.originalUri ,
+        headers:    req.headers ,
+    }
+
 })
 
 //  Firewall at entry gateway attaches the authorization token to the request object
@@ -34,5 +44,6 @@ app.post('/tlshandshake',(req,res)=>{
 })
 app.use("/article",articleRouter)
 app.use("/user",userRouter)
+app.use("/log",logRouter)
 
 module.exports = app;

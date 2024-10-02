@@ -134,14 +134,26 @@ function global(req,res,next) {
         temp.call(this,JSON.stringify(resData))    
     }
 
-    //  Setting CORS policy
     res.set({
+        //  Setting CORS policy
         'Access-Control-Allow-Origin':'*',
         'Access-Control-Allow-Headers':'*',
         'Access-Control-Allow-Methods':'*',
         'Access-Control-Expose-Headers':'*',
         'Access-Control-Max-Age':'7200',
         'Access-Control-Allow-Credentials':true,
+        'Timing-Allow-Origin':'*',
+        /*
+          Client Hints provide information about
+            client's device, agent, and connection
+        */    
+        'Accept-CH': 
+            'Sec-*'
+            +', Sec-CH-UA, Sec-CH-UA-*'
+            +', Sec-CH-Prefers-*'
+            +', Attribution-*'
+            +', Device-Memory'
+            +', Save-Data, Downlink, ECT, RTT'
     })
 
     next()

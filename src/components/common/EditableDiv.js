@@ -3,7 +3,7 @@ import React, {useEffect, useRef} from "react"
 /*
     EditableDiv is a div which allows the users to edit its text content.
     Its functionality is simlar to that of the HTML text-area element, 
-        but it allows more customizations.
+        but it supports more customizations.
     It is basically a wrapper around a HTML div with contentEditable attribute.
 */
 function EditableDiv({name, props: { className=' ', content, idx,tag, setContent, editable=true, editing=true, errorsProp } , enterEvent}) {
@@ -14,8 +14,8 @@ function EditableDiv({name, props: { className=' ', content, idx,tag, setContent
         :content[name]
 
     /*
-        During every user type events, the EditableDiv component rerenders,
-            followed which the browser repaints the component.
+        During every key input events, the EditableDiv component rerenders,
+            following which the browser repaints the component.
             This causes the browser to reset the text cursor to 
             the first character of the div.
             The followng useEffect, fixes the cursor after every such rerenders. 

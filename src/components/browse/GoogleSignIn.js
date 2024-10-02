@@ -3,14 +3,14 @@ import InMemoryStore from "../common/InMemoryStore"
 
 function GoogleSignIn () {
 
-    const [ oAuth2Endpoint , setOAuth2Endpoint ] = useState()
+    const [ OAuth2Endpoint , setOAuth2Endpoint ] = useState()
 
     useEffect(() => {
         var REACT_API_URL = InMemoryStore.store.cache.env.REACT_API_URL    
         if(!REACT_API_URL) 
             REACT_API_URL = process.env.REACT_API_URL
         var loginUri
-        if(!REACT_API_URL) loginUri = "https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=https%3A%2F%2Flocalhost%3A3000&client_id=639506257680-1fa5smdb926pfacdgmhv8ijb882ujn9c.apps.googleusercontent.com&response_type=id_token%20token&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&flowName=GeneralOAuthFlow&nonce=n-0S6_WzA2Mj&key%3D=AIzaSyC0VfTk_XGGIoUy9Kj18xdR6Re3gMY_dLs"
+        if(!REACT_API_URL) loginUri = "https://accounts.google.com/o/OAuth2/v2/auth?redirect_uri=https%3A%2F%2Flocalhost%3A3000&client_id=639506257680-1fa5smdb926pfacdgmhv8ijb882ujn9c.apps.googleusercontent.com&response_type=id_token%20token&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&flowName=GeneralOAuthFlow&nonce=n-0S6_WzA2Mj&key%3D=AIzaSyC0VfTk_XGGIoUy9Kj18xdR6Re3gMY_dLs"
         else loginUri = REACT_API_URL+'user/login'
         setOAuth2Endpoint(loginUri)
         InMemoryStore.subscribe(() => {
@@ -22,7 +22,13 @@ function GoogleSignIn () {
 
     
     return (
-        <a className="google-sign-in" aria-label='Google Sign In' name='Google Sign In' rel='external' href={oAuth2Endpoint}>
+        <a className="google-sign-in" aria-label='Google Sign In' name='Google Sign In' rel='external' 
+            href={OAuth2Endpoint}
+        >
+            {//onClick={() => window.open(OAuth2Endpoint,'Sign In with Google','popup')}
+            }
+                {//href={OAuth2Endpoint}>
+                }
             <div className="gsi-button vertical-align">
                 <div className="gsi-button-content horizontal-align">
                     <div className="gsi-svg">

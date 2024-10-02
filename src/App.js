@@ -10,6 +10,8 @@ import useRoute from "./components/browse/useRoute"
 import InMemoryStore from './components/common/InMemoryStore';
 //const Router = import('./components/browse/Router')
 
+import logWebVitals from './logWebVitals';
+
 const AppContext = createContext()
 
 // The whole app layout is memoized to avoid unnecessary rerenders during global state changes 
@@ -50,6 +52,7 @@ function App() {
 
   //  Loads the session state during app launch. 
   useEffect(() => { ( async () => {
+    logWebVitals(API)
     setEnv()
     setRoute()
     const sessionRes = await API.getSession()

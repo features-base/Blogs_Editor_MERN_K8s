@@ -29,8 +29,11 @@ const shell = <Shell cssChunk={cssChunk}></Shell>
 
 //  Logging incoming http packets at entry gateway
 app.use((req,res,next) => { console.log(
-  'Request recieved =>','ip:',req.ip,' , origin:',req.origin,' , method:',req.method,' , url:',req.originalUrl
-); next() })
+  'Request recieved =>','ip:',req.ip,' , origin:',req.origin,' , method:',req.method,' , url:',req.originalUrl,
+  '\nheaders\n:'
+);
+console.dir(req.headers)
+next() })
 
 //  Minified react chunks are exposed as static files.
 //  Used by SSR shell to load chunks.
