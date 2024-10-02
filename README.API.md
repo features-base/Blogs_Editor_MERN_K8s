@@ -2,9 +2,11 @@
 
 ## TLS - Transport Layer Security
 
+To manage TLS sessions in addition to the existing HTTPS protocol.
+
 <h3>/api/tls/handshake</h3> 
 <pre>
-To establish a TLS session through a TLS handshake.
+To establish a TLS session through TLS handshake.
 <b>Methods Allowed :</b> POST
 <b>Content-Type :</b> application/json 
 <b>Body :</b>  
