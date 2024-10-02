@@ -269,6 +269,19 @@ const exchangeAuthCode = async ( { authorizationCode , reqIp, accessToken, codeV
     return claims
 }
 
+const logRequest = async (req,res,next) => {
+    console.log('request recieved :\noriginalUri =',req.originalUrl,'\nrequest recieved :\nreq.body =',req.body)
+    next()
+    const entry = {
+        type:   'request' ,
+        ip: req.ip  ,
+        method: req.method  ,
+        host:   req.hostname ,
+        originalUri:    req.originalUri ,
+        headers:    req.headers ,
+    }
+}
+
 const filter = async (req,res,next) => {
     const { filterQuery } = req.body
 
@@ -490,4 +503,4 @@ const requestHandler = {
     filter, update, search, getById
 }
 
-module.exports = { generateKey, exchangeAuthCode, rsa, isAuthenticated, protectedRoute, configureResponse , requestHandler }
+module.exports = { generateKey, exchangeAuthCode, logRequest, rsa, isAuthenticated, protectedRoute, configureResponse , requestHandler }

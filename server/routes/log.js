@@ -12,6 +12,7 @@ router.post("/push", async(req,res,next) => {
     const log = {
         reqHeaders: req.headers,
         ...req.body.log ,
+        timestamp: new Date()
     }
 
     if(req.isAuthenticated) {

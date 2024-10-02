@@ -4,7 +4,7 @@ function reportWebVitals(API) {
     API.accessResource({
       resourceType: 'log',
       operation: 'push',
-      body: { entry }
+      body:  entry 
     })
   }
 
@@ -12,6 +12,7 @@ function reportWebVitals(API) {
     try {
     const entries = list.getEntries()
     entries.map((entry,idx) => {
+      console.log(entry)
 
       //  first-contentful-paint
       if(entry.name === 'first-contentful-paint') {
