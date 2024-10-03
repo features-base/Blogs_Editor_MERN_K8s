@@ -52,8 +52,8 @@ function App() {
 
   //  Loads the session state during app launch. 
   useEffect(() => { ( async () => {
-    logWebVitals(API)
     setEnv()
+    logWebVitals(API)
     setRoute()
     const sessionRes = await API.getSession()
     if(!sessionRes)

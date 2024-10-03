@@ -1,35 +1,36 @@
 function reportWebVitals(API) {
 
-  function pushEntry(entry) {
+  function pushEntry({entry,metric}) {
     API.accessResource({
       resourceType: 'log',
       operation: 'push',
-      body:  entry 
+      body:  { ...entry.toJSON(), metric } 
     })
+      
   }
 
   function observe(list, observer) {
     try {
     const entries = list.getEntries()
     entries.map((entry,idx) => {
-      console.log(entry)
-
       //  first-contentful-paint
       if(entry.name === 'first-contentful-paint') {
         if(entry.duration > 1800) 
-          pushEntry({...entry,metric:'FCP'})
+          pushEntry({entry,metric:'FCP'})
       }
       
       //  resource
       if(entry.entryType === 'resource') {
-        if(entry.duration > 800) 
-          pushEntry({...entry,metric:'resource'})
+        console.log('resource entry',entry)
+        //if(entry.duration > 100) 
+        if(entry.name.indexOf('push')===-1)
+          pushEntry({entry,metric:'resource'})
       }
       
       //  navigation
       if(entry.entryType === 'navigation') {
         if(entry.duration > 1500)
-          pushEntry({...entry,metric:'navigation'})
+          pushEntry({entry,metric:'navigation'})
       }
 
       if(entry.entryType === 'layout-shift') {

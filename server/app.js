@@ -9,6 +9,7 @@ const { cssChunkFile, bootstrapScripts, bootstrapScriptContentIntitial } = requi
 
 const path = require('path')
 const fs = require('fs')
+const { logRequest , configureResponse: {global} } = require("./routes/middlewares")
 
 // cssChunk contains the minified css code of the whole app.
 const cssChunk = fs.readFileSync(path.join('./build',cssChunkFile),'utf8')
@@ -27,13 +28,12 @@ const cssChunk = fs.readFileSync(path.join('./build',cssChunkFile),'utf8')
 */
 const shell = <Shell cssChunk={cssChunk}></Shell>
 
+app.use(global)
+
+app.use(express.json())
+
 //  Logging incoming http packets at entry gateway
-app.use((req,res,next) => { console.log(
-  'Request recieved =>','ip:',req.ip,' , origin:',req.origin,' , method:',req.method,' , url:',req.originalUrl,
-  '\nheaders\n:'
-);
-console.dir(req.headers)
-next() })
+app.use(logRequest)
 
 //  Minified react chunks are exposed as static files.
 //  Used by SSR shell to load chunks.

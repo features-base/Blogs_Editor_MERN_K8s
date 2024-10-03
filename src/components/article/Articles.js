@@ -11,7 +11,7 @@ function articlesReducer(articles,{ newArticles , status , setNotification }) {
         if(status) {
             return {...articles,status:'loading'}
         }
-        setNotification({ type:'error', message:'Error in retrieving the articles' })
+        //setNotification({ type:'error', message:'Error in retrieving the articles' })
         return({...articles,status:'error'})
     }
     if(!newArticles.length)

@@ -55,7 +55,6 @@ router.post("/getUserInfo", async(req,res) => {
 //  Submits the authorization code to the IdP in exchange for the user claims ( user info )
 router.post("/getGoogleOAuth2Claims", async(req,res) => {
     var { accessToken , idToken , authorizationCode, editing = {cloud:{},local:{}} } = req.body
-    console.log('request 1')
     // baseUrl will be of the form api/newEntitys/... , api/users... etc...
     const resourceType = req.baseUrl.split('/')[1]
     const collectionName = resourceType+'s'
@@ -74,7 +73,6 @@ router.post("/getGoogleOAuth2Claims", async(req,res) => {
         claims = await exchangeAuthCode({authorizationCode,reqIp:req.ip})
     }
     catch(error) {
-        console.log(error)
         return res.status(500).send("Error during openid protocol execution")
     }
 

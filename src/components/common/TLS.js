@@ -13,6 +13,8 @@ class TLS {
         var resolver,rejecter
         this.status = new Promise((resolve,reject) => { resolver=resolve; rejecter=reject })
         var key = AES.generateKey()
+        console.log(InMemoryStore.store.cache.env.REACT_API_URL+'tlshandshake')
+        console.log(InMemoryStore.store)
         var clientHello = {
             method: 'post',
             uri: InMemoryStore.store.cache.env.REACT_API_URL+'tlshandshake',
@@ -31,6 +33,7 @@ class TLS {
             console.log('error during clientHello\n',error)
             throw(error)
         }
+        console.log('serverHello.data :',serverHello.data)
         session.aes = { key }
         session.sessionId = serverHello.data.sessionId
         var data = await AES.decrypt({ 
@@ -39,6 +42,7 @@ class TLS {
             authTag: serverHello.data.authTag,
             key: session.aes.key,
         })
+        console.log('serverHello.decryptedData :',data)
         resolver(session.aes)
         return 
     }

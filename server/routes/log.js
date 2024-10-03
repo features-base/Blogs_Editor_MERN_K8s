@@ -22,9 +22,7 @@ router.post("/push", async(req,res,next) => {
     const inserted = await executeTransaction( async () => {
         return logdb.collection('performance').insertOne(log)
     }, res)
-
-    console.log(inserted)
-
+    
 })
 
 router.post("/search", () => {})

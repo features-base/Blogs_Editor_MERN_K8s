@@ -66,7 +66,9 @@ function symmetricEncrypt(req={body:{sessionId:'asda'}},res,resData={}) {
 //  Decrypts incoming packets using symmetric key
 function symmetricDecrypt(req,res) {
     const { payload, sessionId, iv, authTag } = req.body
-    if(sessionId === undefined) return
+    if(sessionId === undefined) {
+        res.status(400).statusText('sessionId field required').send('Session ID value in request.body cannot be undefined for symmetric encryption')
+    }
     const key = UserSessions.getAesKey(sessionId)
     if(key === undefined) {
         res.status(419).statusText('Session Expired.').send('The TLS session has expired. Please restart the TLS handshake in order to continue using symmetric encryption.')
@@ -126,7 +128,7 @@ function global(req,res,next) {
 
     //  Customize res.send to encrypt the exit packets
     res.send = function (data) {
-        if(data === undefined) data = res.data
+        if(data === undefined) data = this.data
 
         //  Firewall at exit gateway encrypts the payloads
         var resData = rsa.encryptPayload(req,res,data)
@@ -270,7 +272,12 @@ const exchangeAuthCode = async ( { authorizationCode , reqIp, accessToken, codeV
 }
 
 const logRequest = async (req,res,next) => {
-    console.log('request recieved :\noriginalUri =',req.originalUrl,'\nrequest recieved :\nreq.body =',req.body)
+    console.log(
+        'Request recieved =>','ip:',req.ip,' , origin:',req.origin,
+        ' , method:',req.method,' , url:',req.originalUrl,
+        ' , body:',req.body
+      );
+      //console.log(req)
     next()
     const entry = {
         type:   'request' ,
@@ -285,7 +292,7 @@ const logRequest = async (req,res,next) => {
 const filter = async (req,res,next) => {
     const { filterQuery } = req.body
 
-    // baseUrl will be of the form api/newEntitys/... , api/users/... etc...
+    // baseUrl will be of the form api/article/... , api/user/... etc...
     const resourceType = req.baseUrl.split('/')[2]
     const collectionName = resourceType+'s'
 
