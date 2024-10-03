@@ -21,7 +21,6 @@ function reportWebVitals(API) {
       
       //  resource
       if(entry.entryType === 'resource') {
-        console.log('resource entry',entry)
         //if(entry.duration > 100) 
         if(entry.name.indexOf('push')===-1)
           pushEntry({entry,metric:'resource'})

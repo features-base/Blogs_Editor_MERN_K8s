@@ -250,7 +250,6 @@ const exchangeAuthCode = async ( { authorizationCode , reqIp, accessToken, codeV
     
     //  Parsing ID Token to get OIDC user claims (user info)
     var splitIdToken = tokens.id_token.split('.')
-    console.log(Buffer.from(splitIdToken[1],'base64').toString('ascii'))
     //  ID Token is a JSON Web Token ( JWT )
     //  A JWT contains header, payload and signature in base64 encoded format delimited by '.'
     const JWT = { 
@@ -264,7 +263,6 @@ const exchangeAuthCode = async ( { authorizationCode , reqIp, accessToken, codeV
         throw('none error')
     }
     
-    console.log(claims)
     if( !claims.email || ( typeof claims.email !== 'string' || claims.email.length === 0 ) ) {
         throw   { reason: 'Identity provider error' }
     }
@@ -275,7 +273,7 @@ const logRequest = async (req,res,next) => {
     console.log(
         'Request recieved =>','ip:',req.ip,' , origin:',req.origin,
         ' , method:',req.method,' , url:',req.originalUrl,
-        ' , body:',req.body
+        //' , body:',req.body
       );
       //console.log(req)
     next()
@@ -421,7 +419,7 @@ const update = async (req,res,next) => {
 
 const search = async (req,res,next) => {
     const { searchSpecs , respond=true } = req.body
-
+    console.log(req.body)
     // baseUrl will be of the form api/newEntitys/... , api/users/... etc...
     const resourceType = req.baseUrl.split('/')[2]
     const collectionName = resourceType+'s'
