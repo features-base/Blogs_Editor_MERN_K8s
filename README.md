@@ -1,4 +1,4 @@
-# Articles
+# Articles-Showcase
 
 A MERN Stack website for users to create, edit, and share articles. The built-in editor provides features to work and save your progress across sessions. The built-in search engine offers search functionalities across the entire collection of articles.
 
