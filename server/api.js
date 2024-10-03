@@ -19,7 +19,9 @@ app.use(express.json())
 //  Firewall at entry gateway decrypts both symmetric and asymmetric encryptions
 app.use(rsa.decryptPayload)
 
-app.use(logRequest)
+app.use((req,res,next) => {
+    console.log('api :  ',req.originalUri)
+    next()},logRequest)
 //  Firewall at entry gateway attaches the authorization token to the request object
 app.use(isAuthenticated)
 
