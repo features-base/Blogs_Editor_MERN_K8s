@@ -20,7 +20,7 @@ app.use(express.json())
 app.use(rsa.decryptPayload)
 
 app.use((req,res,next) => {
-    console.log('api :  ',req.originalUri)
+    console.log('api :  ',req.originalUrl)
     next()},logRequest)
 //  Firewall at entry gateway attaches the authorization token to the request object
 app.use(isAuthenticated)
