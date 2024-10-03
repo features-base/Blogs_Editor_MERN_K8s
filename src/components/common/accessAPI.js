@@ -39,8 +39,8 @@ const methodConfig = {
 }
 
 const enableTLS = 
-                (window.env && window.env.enableTLS)?true:
-                (process.env.enableTLS)?true:
+                (typeof window !== 'undefined'  && window.env && window.env.enableTLS)    ?   true:
+                (process.env.enableTLS) ?   true:
                 false
 
 async function accessAPI(options) {  
@@ -88,7 +88,7 @@ async function accessAPI(options) {
             options.body = originalBody
             return accessAPI(options)
         }
-        var response = error.response
+        response = error.response
     }
     if (enableTLS)
         response.data = await AES.decrypt({

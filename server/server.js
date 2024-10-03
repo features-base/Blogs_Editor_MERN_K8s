@@ -8,7 +8,7 @@ if (
  // 0 
   process.env.HOST_ENV === 'azure' 
   ||  process.env.HTTPS === 'false'
- // ||  true //  Can be used when process.env is not working 
+  ||  true //  Can be used when process.env is not working 
 ) {
   
   //  HTTP listener
