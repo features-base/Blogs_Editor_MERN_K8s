@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - production
+    paths-ignore:
+      - '**/*.md'
 jobs:
   Build:
     name: Azure-Build-and-Deploy

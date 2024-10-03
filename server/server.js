@@ -4,8 +4,8 @@ const https = require('https');
 
 var PORT = process.env.PORT
 
-if ( 0 //process.env.HOST_ENV === 'azure' 
-  //||  process.env.HTTPS === 'false'
+if ( process.env.HOST_ENV === 'azure' 
+  ||  process.env.HTTPS === 'false'
   //||  true //  Can be used when process.env is not working 
 ) {
   
