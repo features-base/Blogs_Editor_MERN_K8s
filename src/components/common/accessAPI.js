@@ -38,16 +38,21 @@ const methodConfig = {
 
 }
 
+const enableTLS = 
+                (window.env && window.env.enableTLS)?true:
+                (process.env.enableTLS)?true:
+                false
 
 async function accessAPI(options) {  
     const session = options.session
     const originalBody = { ...options.body }
-    if( ! ( options.method in ['OPTIONS','GET'] ) )
+    if( enableTLS &&    ! ( options.method in ['OPTIONS','GET'] ) )
         if(options.body && options.body instanceof Object) {
             if(!session.aes) 
                 try { 
                     console.log('Intitiating tls handshake\n');
-                    await TLS.handshake(options) }
+                    await TLS.handshake(options) 
+                }
                 catch(error) { 
                     console.log('error during tls handshake\n',error)
                     options.setNotification({
@@ -59,7 +64,7 @@ async function accessAPI(options) {
                 }
             console.log('Intitiating symmetric encryption of body :\n',options.body)
             const { ciphertext, authTag, iv } = await AES.encrypt({
-                secret:options.body,
+                secret: options.body,
                 key: session.aes.key
             })
            options.body = { 
@@ -77,7 +82,7 @@ async function accessAPI(options) {
             options.setNotification({type:'error',message:'Network Error'})
             return undefined
         }
-        if(error.response.status === 419) {
+        if(enableTLS && error.response.status === 419) {
             delete session.aes
             delete session.sessionId
             options.body = originalBody
@@ -85,12 +90,13 @@ async function accessAPI(options) {
         }
         var response = error.response
     }
-    response.data = await AES.decrypt({
-        ...response.data, 
-        ciphertext: response.data.payload,
-        key: session.aes.key
-    })
-
+    if (enableTLS)
+        response.data = await AES.decrypt({
+            ...response.data, 
+            ciphertext: response.data.payload,
+            key: session.aes.key
+        })
+    
     return response
 }
 
