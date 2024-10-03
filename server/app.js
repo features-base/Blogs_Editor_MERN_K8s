@@ -28,19 +28,15 @@ const cssChunk = fs.readFileSync(path.join('./build',cssChunkFile),'utf8')
 */
 const shell = <Shell cssChunk={cssChunk}></Shell>
 
-app.use(global)
-
-app.use(express.json())
-
-//  Logging incoming http packets at entry gateway
-app.use(logRequest)
-
 //  Minified react chunks are exposed as static files.
 //  Used by SSR shell to load chunks.
 app.use('/static',express.static('./build/static'))
 
 //  Mounting the API onto <protocol>://<HOST>/api/
 app.use('/api',api)
+
+//  Logging incoming http packets at entry gateway
+app.use(logRequest)
 
 //  Any get requests other than '/static' abd '/api' are served with the 
 //      website UI. The paths and params within the request URIs are assumed 

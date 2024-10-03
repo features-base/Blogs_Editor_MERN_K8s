@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router();
 const { requestHandler , protectedRoute} = require("./middlewares")
 
-app.use((req,res,next)=>{
+router.use((req,res,next)=>{
     console.log('api/article/',req.originalUrl)
     next()})
 

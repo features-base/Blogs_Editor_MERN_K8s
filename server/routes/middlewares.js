@@ -46,6 +46,7 @@ function symmetricEncrypt(req={body:{sessionId:'asda'}},res,resData={}) {
     if(key === undefined) return resData
     var iv = generateKey(16)
     
+    console.log('reqId =',reqId,'exiting resData :',resData)
     //  AES-256-GCM is used for symmetric encryption
     const cipher = crypto.createCipheriv('aes-256-gcm',  key, iv);
     var encryptedPayload = cipher.update(JSON.stringify(resData), 'utf8', 'base64');
@@ -60,6 +61,7 @@ function symmetricEncrypt(req={body:{sessionId:'asda'}},res,resData={}) {
         authTag: authTag.toString('base64'),
         sessionId
     }
+    console.log('exiting resData :',resData)
     return resData
 }
 
@@ -268,12 +270,13 @@ const exchangeAuthCode = async ( { authorizationCode , reqIp, accessToken, codeV
     }
     return claims
 }
-
+var reqId = 1
 const logRequest = async (req,res,next) => {
+    req.reqId = reqId++
     console.log(
-        'Request recieved =>','ip:',req.ip,' , origin:',req.origin,
-        ' , method:',req.method,' , url:',req.originalUrl,
-        //' , body:',req.body
+        'Request recieved =>', 'reqId :',req.reqId,'ip:', req.ip, ' , origin:', req.origin,
+        ' , method:',req.method, ' , url:', req.originalUrl,
+        ' , body:',(req.originalUrl).indexOf('tlshandshake')?req.body:''
       );
       //console.log(req)
     next()

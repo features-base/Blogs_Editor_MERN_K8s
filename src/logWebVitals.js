@@ -1,6 +1,7 @@
 function reportWebVitals(API) {
 
   function pushEntry({entry,metric}) {
+    return
     API.accessResource({
       resourceType: 'log',
       operation: 'push',

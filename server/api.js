@@ -19,16 +19,16 @@ app.use(express.json())
 //  Firewall at entry gateway decrypts both symmetric and asymmetric encryptions
 app.use(rsa.decryptPayload)
 
-app.use((req,res,next) => {
-    console.log('api :  ',req.originalUrl)
-    next()},logRequest)
+//  Logging incoming http packets at entry gateway
+app.use(logRequest)
+
 //  Firewall at entry gateway attaches the authorization token to the request object
 app.use(isAuthenticated)
 
 //  API handling routes
 app.post('/tlshandshake',(req,res)=>{
     //  Handling was been done during the asymmetric decryption itself
-    res.send({})
+    res.send()
 })
 app.use("/article",articleRouter)
 app.use("/user",userRouter)
