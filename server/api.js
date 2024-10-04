@@ -4,6 +4,8 @@ const express = require("express")
 //      which sets http response statusText ( statusMessage )
 express.response.statusText = function (statusText) {
     this.statusMessage = statusText
+    if(![process.env.ENABLE_ADDITIONAL_TLS])    
+        res.body.statusMessage = statusText
     return this
 }
 
@@ -17,7 +19,8 @@ app.use(global)
 app.use(express.json())
 
 //  Firewall at entry gateway decrypts both symmetric and asymmetric encryptions
-app.use(rsa.decryptPayload)
+if(process.env.ENABLE_ADDITIONAL_TLS)
+    app.use(rsa.decryptPayload)
 
 //  Logging incoming http packets at entry gateway
 app.use(logRequest)
@@ -27,9 +30,11 @@ app.use(isAuthenticated)
 
 //  API handling routes
 app.post('/tlshandshake',(req,res)=>{
-    //  Handling was been done during the asymmetric decryption itself
+
+    //  TLS handshake handling was been done during the asymmetric decryption itself
     res.send()
 })
+
 app.use("/article",articleRouter)
 app.use("/user",userRouter)
 app.use("/log",logRouter)

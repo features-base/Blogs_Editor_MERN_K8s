@@ -1,7 +1,12 @@
+import InMemoryStore from "./components/common/InMemoryStore"
+
 function reportWebVitals(API) {
 
   function pushEntry({entry,metric}) {
-    return
+    
+    if(!InMemoryStore.store.cache.env.REACT_ENABLE_WEB_VITALS)
+      return
+    
     API.accessResource({
       resourceType: 'log',
       operation: 'push',

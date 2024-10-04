@@ -38,7 +38,7 @@ app.use('/api',api)
 //  Logging incoming http packets at entry gateway
 app.use(logRequest)
 
-//  Any get requests other than '/static' abd '/api' are served with the 
+//  Any get requests other than '/static' and '/api' are served with the 
 //      website UI. The paths and params within the request URIs are assumed 
 //      to be client agents' navigation paths and params respectively.
 app.get('/*',async (req,res,next)=> {

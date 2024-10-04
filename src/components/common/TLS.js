@@ -2,6 +2,8 @@ import request from "./request"
 import { AES , publicEncrypt } from "./cryptograph"
 import InMemoryStore from "./InMemoryStore"
 
+//  Creates and provides a single additional TLS session throughout
+//      the app in addition to the TLS session within the HTTPS protocol
 class TLS {
     static status = undefined
     static async handshake(options) {

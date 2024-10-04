@@ -35,7 +35,9 @@ function getBootstrapStrings () {
       return entryPoint.replace('https://localhost:443','http://localhost:80')
     })
 
-  var reactEnv = {}
+  var reactEnv = {  }
+  if(process.env.ENABLE_ADDITIOANL_TLS)
+      reactEnv.REACT_ENABLE_ADDITIOANL_TLS = process.env.ENABLE_ADDITIOANL_TLS
   for (var key in process.env) {
     if(key.slice(0,5) === 'REACT')
       reactEnv[key] = process.env[key]

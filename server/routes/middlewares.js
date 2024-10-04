@@ -46,7 +46,6 @@ function symmetricEncrypt(req={body:{sessionId:'asda'}},res,resData={}) {
     if(key === undefined) return resData
     var iv = generateKey(16)
     
-    console.log('reqId =',reqId,'exiting resData :',resData)
     //  AES-256-GCM is used for symmetric encryption
     const cipher = crypto.createCipheriv('aes-256-gcm',  key, iv);
     var encryptedPayload = cipher.update(JSON.stringify(resData), 'utf8', 'base64');
@@ -61,7 +60,6 @@ function symmetricEncrypt(req={body:{sessionId:'asda'}},res,resData={}) {
         authTag: authTag.toString('base64'),
         sessionId
     }
-    console.log('exiting resData :',resData)
     return resData
 }
 
@@ -133,9 +131,10 @@ function global(req,res,next) {
         if(data === undefined) data = this.data
 
         //  Firewall at exit gateway encrypts the payloads
-        var resData = rsa.encryptPayload(req,res,data)
+        if (process.env.ENABLE_ADDITIONAL_TLS)
+            data = rsa.encryptPayload(req,res,data)
         
-        temp.call(this,JSON.stringify(resData))    
+        temp.call(this,JSON.stringify(data))    
     }
 
     res.set({
@@ -422,7 +421,7 @@ const update = async (req,res,next) => {
 
 const search = async (req,res,next) => {
     const { searchSpecs , respond=true } = req.body
-    console.log(req.body)
+    
     // baseUrl will be of the form api/newEntitys/... , api/users/... etc...
     const resourceType = req.baseUrl.split('/')[2]
     const collectionName = resourceType+'s'

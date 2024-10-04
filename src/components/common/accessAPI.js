@@ -38,15 +38,17 @@ const methodConfig = {
 
 }
 
-const enableTLS = 
-                (typeof window !== 'undefined'  && window.env && window.env.enableTLS)    ?   true:
-                (process.env.enableTLS) ?   true:
+const ENABLE_ADDITIONAL_TLS = 
+                (typeof window !== 'undefined'  && window.env && window.env.REACT_ENABLE_ADDITIONAL_TLS)    
+                    ?   true:
+                (process.env.REACT_ENABLE_ADDITIONAL_TLS) 
+                    ?   true:
                 false
 
 async function accessAPI(options) {  
     const session = options.session
     const originalBody = { ...options.body }
-    if( enableTLS &&    ! ( options.method in ['OPTIONS','GET'] ) )
+    if( ENABLE_ADDITIONAL_TLS &&    ! ( options.method in ['OPTIONS','GET'] ) )
         if(options.body && options.body instanceof Object) {
             if(!session.aes) 
                 try { 
@@ -82,7 +84,7 @@ async function accessAPI(options) {
             options.setNotification({type:'error',message:'Network Error'})
             return undefined
         }
-        if(enableTLS && error.response.status === 419) {
+        if(ENABLE_ADDITIONAL_TLS && error.response.status === 419) {
             delete session.aes
             delete session.sessionId
             options.body = originalBody
@@ -90,7 +92,7 @@ async function accessAPI(options) {
         }
         response = error.response
     }
-    if (enableTLS)
+    if (ENABLE_ADDITIONAL_TLS)
         response.data = await AES.decrypt({
             ...response.data, 
             ciphertext: response.data.payload,
