@@ -52,7 +52,7 @@ IndexedDB, local storage, and in-memory data stores are used to manage data in c
 
 ### Deployment and Containerization
 
-During the build, the react app is **minified**, and **bundled** into different chunks based on the locality of reference. React's **lazy loading API** improves page load times through **code splitting**. **Docker**'s optimization features such as bind mounts, and cache mounts are used to manage dependencies in seperate build stages, thus reducing cache invalidations during the react build step.
+During the build, **webpack** **minifies**, and **bundles** the react app into different **chunks** based on the **locality of reference**. React's **lazy loading API** improves page load times through **code splitting**. **Docker**'s optimization features such as bind mounts, and cache mounts are used to manage dependencies in seperate build stages, thus reducing cache invalidations during the react build step.
 **Environment variables** are passed to the **react app in runtime** using the browsers' **window object**. The window object is initialized with an env object using a self-destructing script tag, which is provided along with the initial **shell of SSR**.
 
 The source code is committed to the GitHub repo, where a **GitHub actions workfow** rebuilds a new docker image and pushes it to **Azure Container Registry**, after which, the workflow redeploys the **Azure Container App** as a **serverless** instance to publish the committed app to the end-users.
