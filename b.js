@@ -1,5 +1,0 @@
-console.log(
-JSON.stringify(
-    {"iss":"https://accounts.google.com","azp":"202474409828-be8m42ui7rm6pojgd1ft322ivcft4arq.apps.googleusercontent.com","aud":"202474409828-be8m42ui7rm6pojgd1ft322ivcft4arq.apps.googleusercontent.com","sub":"114983916347744876431","email":"sebastiandavidex@gmail.com","email_verified":true,"at_hash":"AvuArIKSajaHUTps3B6SVw","nonce":"o?=o?=\u0000\u001ao?=>\u0015o?={o?=\u0010=Ao?=\u000fo?='o?=o?=\u0003FOio?=\u00185Jo?=;o?=Bo?=o?='o?=o?=X8o?=\u0012o?=?o?=o?=o?=V\n\u0019Yo?=o?=G"zXo?=o?=o?=o?=\no?=o?=o?=qao?=Qo?=\u0000Y#o?=6Ro?=Io?=9k8↨lC\u0003o?=o?=4o?=o?=Ho?=1o?=o?=\u00045o?=\u000f;o?=\"pM4+o?=So?=^♠Kf\u0017'o?=o?=dS\"\u00045o?=o?=o?=","name":"Sebastian David","picture":"https://lh3.googleusercontent.com/a/ACg8ocLyNxz588UCz5tPMKQ-pP8a2POnFiGdHUAs8B2OBlJsC0cY1Q=s96-c","given_name":"Sebastian","family_name":"David","iat":1727598694,"exp":1727602294}
-)
-)
