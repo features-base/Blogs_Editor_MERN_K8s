@@ -32,7 +32,7 @@ The UI provides **efficiency** and reduces **latency** while accessing data usin
 
 The app utilizes the **performance API** of client agents, to ensure that the users are provided with the optimal performance. Whenever the users experience any issues like lack of responsiveness, latency in resource fetching, or inconvenient layout-shifts, the app reports, and logs the event. 
 The app also **logs** every request made by the users along with details about the user's device ( memory, os, ip ), client-agent ( browser ), network connection ( bandwidth, RTT, ECT ), preferences ( color , language ), etc...
-These reports and logs are analysed to solve problems, and improve the user experience.
+These reports and logs are **analysed** to solve problems, and improve the user experience.
 
 ### Design Patterns and Coding Standards
 
