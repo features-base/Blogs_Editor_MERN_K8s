@@ -227,12 +227,15 @@ const exchangeAuthCode = async ( { authorizationCode , reqIp, accessToken, codeV
     
     if(authorizationCode) {
         var tokenBody = { 
+            //  client ID and secret were generated in the GCP console
             client_id: process.env.GOOGLE_OAUTH2_CLIENT_ID ,
             client_secret: process.env.GOOGLE_OAUTH2_CLIENT_SECRET ,
             code: authorizationCode,    //  the authCode submitted by the client
             //  code verifier is used for PKCE flow
             code_verifier: Secrets.data.codeVerifiers[reqIp],    
-            grant_type: 'authorization_code',   //  specifies the flow as 'Authorization Flow'
+            //  specifies the flow as 'Authorization Flow'
+            //      PKCE is enabled by the code verifier
+            grant_type: 'authorization_code',   
             redirect_uri: redirectUri
         }
         
@@ -251,6 +254,7 @@ const exchangeAuthCode = async ( { authorizationCode , reqIp, accessToken, codeV
     
     //  Parsing ID Token to get OIDC user claims (user info)
     var splitIdToken = tokens.id_token.split('.')
+    
     //  ID Token is a JSON Web Token ( JWT )
     //  A JWT contains header, payload and signature in base64 encoded format delimited by '.'
     const JWT = { 
@@ -411,7 +415,7 @@ const update = async (req,res,next) => {
         }
     }
     if(result === false) return
-    if(!(result.acknowledged && ( result.upsertedCount || result.matchedCount )))
+    if(!(result.acknowledged && ( result.upsertedCount || result.matchedCount || result.insertedId )))
         console.log('error in',resourceType,'update\n',newEntity,"\n",result)
     if(respond)
         res.send({result})

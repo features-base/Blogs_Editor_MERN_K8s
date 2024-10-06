@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/version: "1.0.0"
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: MERN_App
-    app.kubernetes.io/managed-by: Minikube
+    app.kubernetes.io/managed-by: minikube
 spec:
   selector:
     matchLabels:
@@ -59,7 +59,7 @@ metadata:
     app.kubernetes.io/version: "1.0.0"
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: MERN_App
-    app.kubernetes.io/managed-by: Minikube
+    app.kubernetes.io/managed-by: minikube
 spec:
   selector:
     app: nodejs-server
