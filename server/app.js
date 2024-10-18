@@ -12,7 +12,11 @@ const fs = require('fs')
 const { logRequest , configureResponse: {global} } = require("./routes/middlewares")
 
 // cssChunk contains the minified css code of the whole app.
-const cssChunk = fs.readFileSync(path.join('./build',cssChunkFile),'utf8')
+const cssChunk = 
+  //fs.readFileSync(
+  //  'C:\\Projects\\Showcase\\MERN\\articles_scratch2\\build\\static\\css\\main.9dca4994.css'
+  //  ,'utf8')
+  fs.readFileSync(path.join('./dist',cssChunkFile),'utf8')
 
 /*  
     The whole css definitions are embedded into a style tag within the shell of SSR 
@@ -30,7 +34,7 @@ const shell = <Shell cssChunk={cssChunk}></Shell>
 
 //  Minified react chunks are exposed as static files.
 //  Used by SSR shell to load chunks.
-app.use('/static',express.static('./build/static'))
+app.use('/static',express.static('./dist'))
 
 //  Mounting the API onto <protocol>://<HOST>/api/
 app.use('/api',api)
@@ -51,7 +55,7 @@ app.get('/*',async (req,res,next)=> {
       +bootstrapScriptContentIntitial
   }
   
-  //  Creating an SRR streaming instance
+  //  Creating an SSR streaming instance
   const { pipe, abort: _abort } = ReactDOMServer.renderToPipeableStream(
     shell
     , 

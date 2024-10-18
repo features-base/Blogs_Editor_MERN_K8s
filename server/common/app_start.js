@@ -19,21 +19,17 @@ moveFavicon()
 function getBootstrapStrings () {
   
   //  Entrypoints to fetch for the chunks
-  var entryPoints = JSON.parse(fs.readFileSync(
-      path.join(__dirname,'/../../build/asset-manifest.json')))
-      .entrypoints
-  
+  const assetManifest = JSON.parse(fs.readFileSync(
+    path.join(__dirname,'/../../dist/asset-manifest.json')))
+
+  var entryPoints = assetManifest.entrypoints
+  const hostUrl = (process.env.HOST_ENV === 'azure')?
+    process.env.HOST_URL+'/':
+    'http://localhost:80/'
+
   entryPoints[1] = 
-          ((process.env.HOST_ENV === 'azure')?
-            process.env.HOST_URL+'/':
-            'https://localhost:443/'
-          )
+          hostUrl
           +entryPoints[1]
-          
-  if(0) 
-    entryPoints = entryPoints.map((entryPoint) => {
-      return entryPoint.replace('https://localhost:443','http://localhost:80')
-    })
 
   var reactEnv = {  }
   if(process.env.ENABLE_ADDITIOANL_TLS)
@@ -56,12 +52,19 @@ function getBootstrapStrings () {
 
   //  The bootstrap script assigns runtime env to window.env
   var bootstrapScriptContentIntitial = 'window.env={...((window.env)?window.env:{}),...JSON.parse('+reactEnvString+')};'
-  
+
   //  After that, the script tag removes itself from the HTML DOM
   bootstrapScriptContentIntitial += 'var envScriptElement = document.currentElement;'+
     'if(envScriptElement) envScriptElement.remove();'
 
-  return { cssChunkFile: entryPoints[0] , bootstrapScripts: [ entryPoints[1] ] , bootstrapScriptContentIntitial }
+  return { cssChunkFile: assetManifest['main.css'] , 
+    bootstrapScripts: [ 
+      assetManifest['runtime.js'],
+      assetManifest['main.js'],
+      assetManifest['vendors.js'],
+      assetManifest['main.css']
+    ].map(resource => '/static/'+resource) , 
+    bootstrapScriptContentIntitial }
 }
 
 module.exports = { ...getBootstrapStrings() } 

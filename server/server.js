@@ -3,12 +3,14 @@ const fs = require('fs');
 const https = require('https');
 
 var PORT = process.env.PORT
-
+console.log(process.env)
 if ( 
-  0 
- // process.env.HOST_ENV === 'azure' 
- // ||  process.env.HTTPS === 'false'
- // ||  true //  Can be used when process.env is not working 
+  process.env.NODE_ENV !== 'development' 
+  &&
+  (
+    process.env.HOST_ENV === 'azure' 
+    ||  process.env.HTTPS === 'false'
+  )
 ) {
   
   //  HTTP listener

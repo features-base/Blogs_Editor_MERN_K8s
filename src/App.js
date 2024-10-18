@@ -31,7 +31,7 @@ const setEnv = () => {
   else {
     InMemoryStore.store.cache.env = { 
       REACT_API_URL: 
-        process.env.REACT_API_URL?process.env.REACT_API_URL:'http://localhost:3000/api/' 
+        process.env.REACT_API_URL?process.env.REACT_API_URL:'http://localhost:80/api/' 
     }
   }
   InMemoryStore.publish()

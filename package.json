@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@babel/preset-env": "^7.22.4",
-    "@babel/preset-react": "^7.22.3",
+    "@babel/preset-env": "^7.25.7",
+    "@babel/preset-react": "^7.25.7",
     "@babel/register": "^7.21.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
@@ -18,11 +18,9 @@
   },
   "scripts": {
     "start": "node server/index.js",
-    "build": "node js_scripts/reactStartScripts && react-scripts build",
+    "build": "webpack --config ./webpack.prod.js",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "start-dev": "react-scripts start",
-    "ssr": "yarn build && node server/index.js"
+    "start-react-dev": "webpack serve --open --config ./webpack.dev.js"
   },
   "eslintConfig": {
     "extends": [
@@ -41,5 +39,19 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.7",
+    "babel-loader": "^9.2.1",
+    "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.6.0",
+    "mini-css-extract-plugin": "^2.9.1",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0",
+    "webpack-manifest-plugin": "^5.0.0"
   }
 }

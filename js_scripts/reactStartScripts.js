@@ -5,7 +5,7 @@ const path = require("path")
 //  This reduces the number of chunks 
 //      to avoid unnecessary network requests
 //      and reduce page load latencies
-
+console.log('running reactStartScripts.js')
 const lines = []
 var folder, entities, entityContent,
     src = path.join(__dirname,'/../src')

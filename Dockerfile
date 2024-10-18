@@ -2,6 +2,8 @@
 
 
 ARG NODE_VERSION=20.10.0
+ARG PORT=80
+ARG DOCKER_ENV=production
 FROM node:${NODE_VERSION}-alpine as base
 
 # Set working directory for all build stages.
@@ -42,20 +44,19 @@ RUN yarn build
 FROM base as final
 
 # Use production node environment by default.
-ENV NODE_ENV production
-ENV REACT_APP reactapp1
-RUN --mount=type=bind,source=.env,target=.env source .env
+ENV NODE_ENV ${DOCKER_ENV}
+
+#RUN --mount=type=bind,source=.env,target=.env source .env
 # Copy package.json so that package manager commands can be used.
 COPY . .
 
 # Copy the production dependencies from the deps stage and also
 # the built application from the build stage into the image.
 COPY --from=deps /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/build ./build
-
+COPY --from=build /usr/src/app/dist ./dist
 
 # Expose the port that the application listens on.
-EXPOSE 443
+EXPOSE ${PORT}
 
 # Run the application.
 CMD yarn start

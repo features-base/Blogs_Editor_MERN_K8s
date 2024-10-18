@@ -1,3 +1,5 @@
+import React from "react"
+
 function getMenuOptions({session,editing,setEditing,article,articleDispatch,submitArticle,setNotification,API,articleOriginal,saved,setSaved}) {
     
     function saveToLocalStorage () {

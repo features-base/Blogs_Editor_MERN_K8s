@@ -1,5 +1,5 @@
 **/.classpath
-**/.env
+**/*.env
 **/.git
 **/.project
 **/.settings
@@ -24,5 +24,5 @@
 **/*.pem
 **/*.cert
 **/*.key
-**/b.js
+/b.js
 /test.js
