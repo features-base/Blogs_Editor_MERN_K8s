@@ -1,11 +1,17 @@
 const path = require('path')
 const fs = require('fs')
 
+/*
+    The plugin runs at the launch of the webpack, to set up the environment
+    It sets up the ouput folder, resolves favicon, and runs optional js_scripts
+*/
+
 class WebpackInitPlugin {
 
     static defaultOptions = {
         buildDir : './dist' ,
         publicDir: './public'
+        //  js_scripts: [ './js_scripts/reactStartScripts.js' ]
     }
 
     constructor(options) {
@@ -42,6 +48,8 @@ class WebpackInitPlugin {
     }
 
     apply(compiler) {
+        // The plugin runs at the launch of the webpack, to set up the environment
+        //      So, it has been tapped to the environment hook
         compiler.hooks.environment.tap('WebkpackInitPlugin', (compilation) => {
             
             // Running custom js_scripts

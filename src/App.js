@@ -8,7 +8,6 @@ import Router from './components/browse/Router'
 import useAPI from './components/common/useAPI';
 import useRoute from "./components/browse/useRoute"
 import InMemoryStore from './components/common/InMemoryStore';
-//const Router = import('./components/browse/Router')
 
 import logWebVitals from './logWebVitals';
 
