@@ -15,7 +15,7 @@ The app supports **Google SSO** authentication to ensure that the articles publi
 
 ### Security and Privacy
 
-The **Node.js** server cannot be accessed without HTTPS. Also, the Node.js server provides dedicated APIs to manage additional TLS sessions on top of the existing TLS session within the HTTPS protocol, using **SHA-256 (asymmetric)**, and **AES-256-GCM (symmetric)** encryptions along with key rotation during every request.
+The **Node.js** server cannot be accessed without HTTPS. Also, the Node.js server provides dedicated APIs to manage additional RSA sessions on top of the existing TLS session within the HTTPS protocol, using **SHA-256 (asymmetric)**, and **AES-256-GCM (symmetric)** encryptions along with key rotation during every request.
 This mechanism ensures privacy by allowing the client and the server to encrypt their communication payloads, thus preventing data leaks while transmitting packets through public or vulnerable networks. This ensures protection from packet sniffing attacks such as man-in-the-middle attacks. The key rotation avoids replay attacks.
 
 The web app doesn't use **cookies** to store personal data such as session tokens, symmetric encryption keys, user info provided by the OAuth2 identity provider, etc... This ensures protection against **CSRF** ( Cross-site request forgery ) attacks.
