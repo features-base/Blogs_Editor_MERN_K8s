@@ -1,6 +1,6 @@
 # Blogs - Edit and Share
 
-A **MERN Stack** website for users to create, edit, and share blogs. The built-in editor provides features to work and save your progress across sessions. The built-in search engine offers search functionalities across the entire collection of articles.
+A **MERN Stack** website for users to create, edit, and share blogs. The built-in editor provides features to work and save your progress across sessions. The built-in search engine offers search functionalities across the entire collection of blogs.
 
 **API Documentation**: [/README.API.md](/README.API.md)
 
@@ -11,7 +11,7 @@ The app's architecture, includes **4 tiers - server, front-end. database, and us
 
 ### Authentication
 
-The app supports **Google SSO** authentication to ensure that the articles published by a user cannot be edited, or deleted by other users. Users can browse, create, or edit articles even without logging in. Once they are ready, they can log in to save their sessions, so that they can continue later, to edit their published articles, or to publish new ones. The built-in editor provides options to save the session in the browser's local storage as well as in the cloud server. The server can track separate sessions for each article.
+The app supports **Google SSO** authentication to ensure that the blogs published by a user cannot be edited, or deleted by other users. Users can browse, create, or edit blogs even without logging in. Once they are ready, they can log in to save their sessions, so that they can continue later, to edit their published blogs, or to publish new ones. The built-in editor provides options to save the session in the browser's local storage as well as in the cloud server. The server can track separate sessions for each blog.
 
 ### Security and Privacy
 
